@@ -11,14 +11,14 @@ public class SpaceShip {
     private final Texture shipImg;
     private final int speed;
     private float fireTime;
-    private float fireRate;
+    private final float fireRate;
 
 
     SpaceShip(){
         shipImg = new Texture("ship.png");
-        position = new Vector2(shipImg.getHeight() + 30,(float) Gdx.graphics.getHeight() / 2);
+        position = new Vector2(shipImg.getWidth() + 30,(float) Gdx.graphics.getHeight() / 2);
         speed = 400;
-        fireRate = 0.4f;
+        fireRate = 0.2f;
     }
 
     public void render(SpriteBatch batch){
@@ -58,5 +58,13 @@ public class SpaceShip {
                 break;
             }
         }
+    }
+
+    public Vector2 getPosition() {
+        return position;
+    }
+
+    public int[] getSize(){
+        return new int[] {shipImg.getWidth(), shipImg.getHeight()};
     }
 }

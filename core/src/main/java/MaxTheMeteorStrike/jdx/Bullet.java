@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
 public class Bullet {
-    private Vector2 position;
+    private final Vector2 position;
     private static final Texture bulletImg = new Texture("bullet.png");
     private static int speed;
     private boolean available;
