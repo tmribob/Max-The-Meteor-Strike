@@ -11,13 +11,13 @@ public class FireParticles {
     private static final int size = 2;
     private final Texture fireTex;
     private final Vector2 position;
-    private float range;
-    private static final int maxRange = 20;
+    private float range; // на сколько далеко улетела частичка
+    private static final int maxRange = 20; // максимальное расстояние, на которое может отлететь частичка
     private static final int speed = 50;
-    private boolean visible;
+    private boolean visible; // активна частица или нет
 
     FireParticles(){
-        float[] color = new float[]{1, 0.68f, 0.32f};
+        float[] color = new float[]{1, 0.68f, 0.32f}; // цвет
         Pixmap fireParticle = new Pixmap(size, size, Pixmap.Format.RGBA8888);
         fireParticle.setColor( color[0], color[1], color[2], 0.75f);
         fireParticle.fill();
@@ -34,7 +34,6 @@ public class FireParticles {
         if (visible) {
             position.x -= speed * dt;
             range += speed * dt;
-
             if (range >= maxRange) {
                 visible = false;
                 range = 0;
@@ -43,8 +42,8 @@ public class FireParticles {
     }
 
     public void setPosition(Vector2 position, int[] size){
-        float indent = ((position.y + size[1]) - (position.y - (float) size[1] / 2)) / 6;
-        this.position.set(position.x - (float) size[0] / 2, MathUtils.random(position.y - indent, position.y + indent));
+        float indent = (float) (size[1]) / 6;
+        this.position.set(position.x - (float) size[0] / 3, MathUtils.random(position.y - indent, position.y + indent));
         visible = true;
     }
 
