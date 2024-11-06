@@ -51,7 +51,4 @@ public class FireParticles {
         return visible;
     }
 
-    public void dispose(){
-        fireTex.dispose();
-    }
 }

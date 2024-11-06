@@ -16,6 +16,7 @@ public class Main extends ApplicationAdapter {
     private static Bullet[] bullets;
     private static FireParticles[] fire;
     private Star[] stars;
+    private Asteroid[] asteroids;
 
     @Override
     public void create() {
@@ -24,6 +25,7 @@ public class Main extends ApplicationAdapter {
         ship = new SpaceShip();
         bullets = new Bullet[40];
         fire = new FireParticles[100];
+        asteroids = new Asteroid[2];
         for (int i = 0; i < stars.length; i++) {
             stars[i] = new Star();
         }
@@ -33,18 +35,21 @@ public class Main extends ApplicationAdapter {
         for (int i = 0; i < fire.length; i++) {
             fire[i] = new FireParticles();
         }
+        for (int i = 0; i < asteroids.length; i++) {
+            asteroids[i] = new Asteroid();
+        }
     }
 
     @Override
     public void render() {
+        ScreenUtils.clear(0, 0, 0, 1f);
         float dt = Gdx.graphics.getDeltaTime();
+        update(dt);
         for (int i = 0; i < MathUtils.random(0, fire.length); i++) {
             if (!fire[i].isVisible()) {
                 fire[i].setPosition(ship.getPosition(), ship.getSize());
             }
         }
-        update(dt);
-        ScreenUtils.clear(0, 0, 0, 1f);
         batch.begin();
         for (Star star : stars) {
             star.render(batch);
@@ -54,6 +59,9 @@ public class Main extends ApplicationAdapter {
             if (b.isAvailable()) {
                 b.render(batch);
             }
+        }
+        for (Asteroid asteroid : asteroids) {
+            asteroid.render(batch);
         }
         for (FireParticles p : fire) {
             if (p.isVisible()) {
@@ -66,15 +74,13 @@ public class Main extends ApplicationAdapter {
     @Override
     public void dispose() {
         batch.dispose();
-        for (FireParticles p : fire) {
-            p.dispose();
-        }
     }
 
     public void update(float dt) {
         ship.update(dt);
         for (Bullet b : bullets) {
             if (b.isAvailable()) {
+                checkConflict(b);
                 b.update(dt);
             }
         }
@@ -83,12 +89,24 @@ public class Main extends ApplicationAdapter {
                 particle.update(dt);
             }
         }
-        for(Star star:stars){
+        for (Star star : stars) {
             star.update(dt);
+        }
+        for (Asteroid asteroid : asteroids) {
+            asteroid.update(dt);
         }
     }
 
     public static Bullet[] getBullets() {
         return bullets;
+    }
+    private void checkConflict(Bullet bullet){
+        for(Asteroid asteroid:asteroids){
+            if (bullet.getPosition().dst(asteroid.getPosition())<32){
+                bullet.setAvailable(false);
+                asteroid.conflict();
+                return;
+            }
+        }
     }
 }
