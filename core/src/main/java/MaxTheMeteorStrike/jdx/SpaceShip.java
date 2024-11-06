@@ -26,19 +26,19 @@ public class SpaceShip {
     }
 
     public void update(float dt){
-        if (Gdx.input.isKeyPressed(Input.Keys.D)){
+        if (Gdx.input.isKeyPressed(Input.Keys.D)|Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
             if (position.x < Gdx.graphics.getWidth() - ((float) shipImg.getWidth() / 2))
                 position.x += speed * dt;
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.W)){
+        if (Gdx.input.isKeyPressed(Input.Keys.W)|Gdx.input.isKeyPressed(Input.Keys.UP)){
             if (position.y < Gdx.graphics.getHeight() - ((float) shipImg.getHeight() / 2))
                 position.y += speed * dt;
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.A)){
+        if (Gdx.input.isKeyPressed(Input.Keys.A)|Gdx.input.isKeyPressed(Input.Keys.LEFT)){
             if (position.x > (float) shipImg.getWidth() / 2)
                 position.x -= speed * dt;
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.S)){
+        if (Gdx.input.isKeyPressed(Input.Keys.S)|Gdx.input.isKeyPressed(Input.Keys.DOWN)){
             if (position.y > (float) shipImg.getHeight() / 2)
                 position.y -= speed * dt;
         }
