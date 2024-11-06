@@ -17,7 +17,7 @@ public class Asteroid {
         new Texture("asteroidGreen.png"), new Texture("asteroidRed.png")};
 
     public Asteroid() {
-        position = new Vector2(Gdx.graphics.getWidth() * (float) Math.random(), Gdx.graphics.getHeight() * (float) Math.random());
+        position = new Vector2(0,0);
         setSpeed();
         setScale();
         rotation = (float) (Math.random() * 360);
@@ -25,11 +25,11 @@ public class Asteroid {
         image = images[hp - 1];
     }
 
-    public void update(float dt) {
+    public void update(float dt, int size) {
         position.x -= (int) (speed + dt);
         if (position.x < -50 | hp == 0) {
-            position.x = Gdx.graphics.getWidth();
-            position.y = Gdx.graphics.getHeight() * (float) Math.random();
+            position.x = Gdx.graphics.getWidth()+50;
+            position.y = (float) size / 2 + (Gdx.graphics.getHeight()-size) * (float) Math.random();
             setSpeed();
             setScale();
             rotation = (float) (Math.random() * 360);

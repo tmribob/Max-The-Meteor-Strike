@@ -2,6 +2,8 @@ package MaxTheMeteorStrike.jdx;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -17,9 +19,13 @@ public class Main extends ApplicationAdapter {
     private static FireParticles[] fire;
     private Star[] stars;
     private Asteroid[] asteroids;
+    private String status;
+    private BitmapFont font;
 
     @Override
     public void create() {
+        status = "start";
+        font = new BitmapFont();
         batch = new SpriteBatch();
         stars = new Star[120];
         ship = new SpaceShip();
@@ -54,18 +60,28 @@ public class Main extends ApplicationAdapter {
         for (Star star : stars) {
             star.render(batch);
         }
+
         ship.render(batch);
-        for (Bullet b : bullets) {
-            if (b.isAvailable()) {
-                b.render(batch);
-            }
-        }
-        for (Asteroid asteroid : asteroids) {
-            asteroid.render(batch);
-        }
         for (FireParticles p : fire) {
             if (p.isVisible()) {
                 p.render(batch);
+            }
+        }
+
+        if (status.equals("start")) {
+            font.draw(batch, "Press Enter for start game", (float) Gdx.graphics.getWidth() / 2, (float) Gdx.graphics.getHeight() / 2);
+        }
+        if (status.equals("start") && Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
+            status = "playing";
+        }
+        if (status.equals("playing")) {
+            for (Bullet b : bullets) {
+                if (b.isAvailable()) {
+                    b.render(batch);
+                }
+            }
+            for (Asteroid asteroid : asteroids) {
+                asteroid.render(batch);
             }
         }
         batch.end();
@@ -78,31 +94,34 @@ public class Main extends ApplicationAdapter {
 
     public void update(float dt) {
         ship.update(dt);
-        for (Bullet b : bullets) {
-            if (b.isAvailable()) {
-                checkConflict(b);
-                b.update(dt);
-            }
+        for (Star star : stars) {
+            star.update(dt);
         }
         for (FireParticles particle : fire) {
             if (particle.isVisible()) {
                 particle.update(dt);
             }
         }
-        for (Star star : stars) {
-            star.update(dt);
-        }
-        for (Asteroid asteroid : asteroids) {
-            asteroid.update(dt);
+        if (status.equals("playing")) {
+            for (Bullet b : bullets) {
+                if (b.isAvailable()) {
+                    checkConflict(b);
+                    b.update(dt);
+                }
+            }
+            for (Asteroid asteroid : asteroids) {
+                asteroid.update(dt, ship.getSize()[1]);
+            }
         }
     }
 
     public static Bullet[] getBullets() {
         return bullets;
     }
-    private void checkConflict(Bullet bullet){
-        for(Asteroid asteroid:asteroids){
-            if (bullet.getPosition().dst(asteroid.getPosition())<32){
+
+    private void checkConflict(Bullet bullet) {
+        for (Asteroid asteroid : asteroids) {
+            if (bullet.getPosition().dst(asteroid.getPosition()) < 48) {
                 bullet.setAvailable(false);
                 asteroid.conflict();
                 return;
