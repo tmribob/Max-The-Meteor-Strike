@@ -12,7 +12,7 @@ public class Bullet {
     private boolean available;
 
     Bullet(){
-        position = new Vector2();
+        position = new Vector2(0, Gdx.graphics.getHeight());
         speed = 800;
         available = false;
     }
@@ -24,7 +24,7 @@ public class Bullet {
     public void update(float dt){
         if (available) {
             position.x += speed * dt;
-            if (position.x > Gdx.graphics.getWidth()) {
+            if (position.x + (float) bulletImg.getWidth() / 2 >= Gdx.graphics.getWidth()) {
                 available = false;
             }
         }
@@ -45,5 +45,13 @@ public class Bullet {
 
     public void setAvailable(boolean available) {
         this.available = available;
+    }
+
+    public int getW(){
+        return bulletImg.getWidth();
+    }
+
+    public int getH(){
+        return bulletImg.getHeight();
     }
 }

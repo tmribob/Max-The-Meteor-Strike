@@ -30,6 +30,7 @@ public class SpaceShip {
     }
 
     public void render(SpriteBatch batch) {
+
         batch.draw(shipImg, position.x - ((float) shipImg.getWidth() / 2), position.y - ((float) shipImg.getHeight() / 2));
     }
 
