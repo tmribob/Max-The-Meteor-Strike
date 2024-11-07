@@ -8,14 +8,13 @@ import com.badlogic.gdx.math.Vector2;
 
 public class SpaceShip {
     private final Vector2 position;
-    private final Texture shipImg;
+    private static final Texture shipImg = new Texture("ship.png");
     private final int speed;
     private float fireTime;
     private final float fireRate;
 
 
     SpaceShip(){
-        shipImg = new Texture("ship.png");
         position = new Vector2(shipImg.getWidth() + 30,(float) Gdx.graphics.getHeight() / 2);
         speed = 400;
         fireRate = 0.2f;
@@ -64,7 +63,7 @@ public class SpaceShip {
         return position;
     }
 
-    public int[] getSize(){
+    public static int[] getSize(){
         return new int[] {shipImg.getWidth(), shipImg.getHeight()};
     }
 }

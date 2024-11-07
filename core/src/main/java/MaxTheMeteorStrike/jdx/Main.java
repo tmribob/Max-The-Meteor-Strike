@@ -20,25 +20,22 @@ public class Main extends ApplicationAdapter {
     private Star[] stars;
     private Asteroid[] asteroids;
     private String status;
-    private BitmapFont pressEnter;
-    private BitmapFont textAsteroidDestroy;
-    private int countAsteroidDestroy;
+    private BitmapFont textField;
+    private static int countAsteroidDestroy;
     private float[] opacity;
 
     @Override
     public void create() {
         status = "start";
-        pressEnter = new BitmapFont();
-        pressEnter.getData().setScale(1.5f,1.5f);
-        textAsteroidDestroy = new BitmapFont();
-        textAsteroidDestroy.getData().setScale(1.5f,1.5f);
+        textField = new BitmapFont();
+        textField.getData().setScale(1.5f, 1.5f);
         batch = new SpriteBatch();
         stars = new Star[120];
         ship = new SpaceShip();
         bullets = new Bullet[40];
         fire = new FireParticles[100];
-        asteroids = new Asteroid[5];
-        opacity = new float[]{0.75f,1.f};
+        asteroids = new Asteroid[50];
+        opacity = new float[]{0.75f, 1.f};
         for (int i = 0; i < stars.length; i++) {
             stars[i] = new Star();
         }
@@ -60,14 +57,13 @@ public class Main extends ApplicationAdapter {
         update(dt);
         for (int i = 0; i < MathUtils.random(0, fire.length); i++) {
             if (!fire[i].isVisible()) {
-                fire[i].setPosition(ship.getPosition(), ship.getSize());
+                fire[i].setPosition(ship.getPosition(), SpaceShip.getSize());
             }
         }
         batch.begin();
         for (Star star : stars) {
             star.render(batch);
         }
-
         ship.render(batch);
         for (FireParticles p : fire) {
             if (p.isVisible()) {
@@ -76,20 +72,21 @@ public class Main extends ApplicationAdapter {
         }
 
         if (status.equals("start")) {
-            pressEnter.draw(batch, "Press Enter for start game", (float) Gdx.graphics.getWidth() / 2, (float) Gdx.graphics.getHeight() / 2);
+            textField.draw(batch, "Press Enter for start game", (float) Gdx.graphics.getWidth() / 2, (float) Gdx.graphics.getHeight() / 2);
+            if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
+                status = "playing";
+            }
         }
-        if (status.equals("start") && Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
-            status = "playing";
-        }
+
         if (status.equals("playing")) {
-            textAsteroidDestroy.draw(batch, "Asteroid destroyed :"+countAsteroidDestroy, (float) Gdx.graphics.getWidth() -250, (float) Gdx.graphics.getHeight() -25);
+            textField.draw(batch, "Asteroid destroyed :" + countAsteroidDestroy, (float) Gdx.graphics.getWidth() - 250, (float) Gdx.graphics.getHeight() - 25);
             for (Bullet b : bullets) {
                 if (b.isAvailable()) {
                     b.render(batch);
                 }
             }
-            for (Asteroid asteroid : asteroids) {
-                asteroid.render(batch);
+            for (int i = 0; i < 5 + countAsteroidDestroy / 30; i++) {
+                asteroids[i].render(batch);
             }
         }
         batch.end();
@@ -110,18 +107,9 @@ public class Main extends ApplicationAdapter {
                 particle.update(dt);
             }
         }
-        if(opacity[1]==1.f){
-            opacity[0]-=0.025f;
-        }else {
-            opacity[0]+=0.025f;
+        if (status.equals("start")) {
+            updateStart();
         }
-        if(opacity[0]>0.75f){
-            opacity[1]=1.f;
-        }
-        if(opacity[0]<0.25f){
-            opacity[1]=0.f;
-        }
-        pressEnter.setColor(1, 1, 1, opacity[0]);
         if (status.equals("playing")) {
             for (Bullet b : bullets) {
                 if (b.isAvailable()) {
@@ -129,10 +117,25 @@ public class Main extends ApplicationAdapter {
                     b.update(dt);
                 }
             }
-            for (Asteroid asteroid : asteroids) {
-                asteroid.update(dt, ship.getSize()[1]);
+            for (int i = 0; i < 5 + countAsteroidDestroy / 30; i++) {
+                asteroids[i].update(dt);
             }
         }
+    }
+
+    public void updateStart() {
+        if (opacity[1] == 1.f) {
+            opacity[0] -= 0.025f;
+        } else {
+            opacity[0] += 0.025f;
+        }
+        if (opacity[0] > 0.75f) {
+            opacity[1] = 1.f;
+        }
+        if (opacity[0] < 0.25f) {
+            opacity[1] = 0.f;
+        }
+        textField.setColor(1, 1, 1, opacity[0]);
     }
 
     public static Bullet[] getBullets() {
@@ -143,9 +146,17 @@ public class Main extends ApplicationAdapter {
         for (Asteroid asteroid : asteroids) {
             if (bullet.getPosition().dst(asteroid.getPosition()) < 48) {
                 bullet.setAvailable(false);
-                countAsteroidDestroy+=asteroid.conflict();
+                asteroid.conflict();
                 return;
             }
         }
+    }
+
+    public static void setCountAsteroidDestroy() {
+        countAsteroidDestroy++;
+    }
+
+    public static int getCountAsteroidDestroy() {
+        return countAsteroidDestroy;
     }
 }
