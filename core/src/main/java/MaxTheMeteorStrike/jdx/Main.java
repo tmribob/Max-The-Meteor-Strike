@@ -58,6 +58,9 @@ public class Main extends ApplicationAdapter {
             status="start";
             ship.setHp(4);
             ship.setPosition();
+            for (int i = 0; i < 5 + countAsteroidDestroy / 30; i++){
+                asteroids[i].createAsteroid();
+            }
         }
         update(dt);
         if (ship.getHp() == 0){
@@ -84,9 +87,11 @@ public class Main extends ApplicationAdapter {
         }
 
         if (status.equals("start")) {
+
             textField.draw(batch, "Press Enter for start game", (float) Gdx.graphics.getWidth() / 2, (float) Gdx.graphics.getHeight() / 2);
             if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
                 status = "playing";
+                opacity[1] = 1.f;
             }
         }
 
@@ -123,14 +128,14 @@ public class Main extends ApplicationAdapter {
             updateStart();
         }
         if (status.equals("playing")) {
+            for (int i = 0; i < 5 + countAsteroidDestroy / 30; i++) {
+                checkConflict(asteroids[i]);
+                asteroids[i].update(dt);
+            }
             for (Bullet b : bullets) {
                 if (b.isAvailable()) {
                     b.update(dt);
                 }
-            }
-            for (int i = 0; i < 5 + countAsteroidDestroy / 30; i++) {
-                checkConflict(asteroids[i]);
-                asteroids[i].update(dt);
             }
         }
     }
@@ -155,18 +160,26 @@ public class Main extends ApplicationAdapter {
     }
 
     private void checkConflict(Asteroid asteroid) {
-        if (ship.getPosition().dst(asteroid.getPosition()) < SpaceShip.getSize()[1]){
-            ship.getDamage();
-            asteroid.createAsteroid();
-            return;
-        }
         for (Bullet bullet : bullets) {
-            if (bullet.getPosition().dst(asteroid.getPosition()) < 48) {
+            if (!bullet.isAvailable()){
+                continue;
+            }
+            if ((bullet.getPosition().x + (float) bullet.getW() / 2 >= asteroid.getPosition().x - (float) asteroid.getW() / 2 ) &&
+                (Math.abs((asteroid.getPosition().y + (float) asteroid.getH() / 2) - (bullet.getPosition().y + (float) bullet.getH() / 2))
+                    < (float) asteroid.getH())){
                 bullet.setAvailable(false);
                 asteroid.conflict();
                 return;
             }
         }
+        if ((asteroid.getPosition().x <= ship.getPosition().x + (float) SpaceShip.getSize()[0] /2)
+                && ((Math.abs((asteroid.getPosition().y + (float) asteroid.getH() / 2) - (ship.getPosition().y + (float) SpaceShip.getSize()[1] / 2)))
+                <= (float) SpaceShip.getSize()[1] / 2)){
+
+            ship.getDamage();
+            asteroid.createAsteroid();
+        }
+
     }
 
     public static void setCountAsteroidDestroy() {

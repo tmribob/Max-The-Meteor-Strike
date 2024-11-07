@@ -42,8 +42,7 @@ public class FireParticles {
     }
 
     public void setPosition(Vector2 position, int[] size){
-        float indent = (float) (size[1]) / 6;
-        this.position.set(position.x - (float) size[0] / 3, MathUtils.random(position.y - indent, position.y + indent));
+        this.position.set(position.x- (float) size[0] /2, MathUtils.random(position.y - (float) size[1] / 2, position.y + (float) size[1] / 2));
         visible = true;
     }
 

@@ -3,6 +3,7 @@ package MaxTheMeteorStrike.jdx;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 public class Asteroid {
@@ -17,7 +18,7 @@ public class Asteroid {
         new Texture("asteroidGreen.png"), new Texture("asteroidRed.png")};
 
     public Asteroid() {
-        position = new Vector2(0, 0);
+        position = new Vector2();
         setSpeed();
         setScale();
         rotation = (float) (Math.random() * 360);
@@ -48,7 +49,8 @@ public class Asteroid {
     }
 
     public void render(SpriteBatch batch) {
-        batch.draw(image, position.x, position.y, 32, 32, 64, 64, scale, scale, rotation, 0, 0, 64, 64, false, false);
+        batch.draw(image, position.x - (float) image.getWidth() / 2, position.y - (float) image.getHeight() / 2, (float) image.getWidth() / 2, (float) image.getHeight() / 2,
+                    image.getWidth(), image.getHeight(), scale, scale, rotation, 0, 0, image.getWidth(), image.getHeight(), false, false);
     }
 
     public Vector2 getPosition() {
@@ -61,12 +63,24 @@ public class Asteroid {
     }
 
     public void createAsteroid() {
-        position.x = (float) (Gdx.graphics.getWidth() + 10 + Math.random() * 100);
-        position.y = (float) SpaceShip.getSize()[1] / 2 + (Gdx.graphics.getHeight() - SpaceShip.getSize()[1]) * (float) Math.random();
+        hp = (int) (1 + Math.random() * 3);
+        image = images[hp - 1];
+        position.x = MathUtils.random(Gdx.graphics.getWidth(), Gdx.graphics.getWidth() + 200);
+        position.y = MathUtils.random((float) image.getHeight() / 2, Gdx.graphics.getHeight() - (float) image.getHeight() / 2);
         setSpeed();
         setScale();
         rotation = (float) (Math.random() * 360);
-        hp = (int) (1 + Math.random() * 3);
-        image = images[hp - 1];
+
+
     }
+
+    public int getW(){
+        return image.getWidth();
+    }
+
+    public int getH(){
+        return image.getHeight();
+    }
+
+
 }
