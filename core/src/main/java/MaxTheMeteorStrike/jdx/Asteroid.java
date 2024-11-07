@@ -17,7 +17,7 @@ public class Asteroid {
         new Texture("asteroidGreen.png"), new Texture("asteroidRed.png")};
 
     public Asteroid() {
-        position = new Vector2(0,0);
+        position = new Vector2(0, 0);
         setSpeed();
         setScale();
         rotation = (float) (Math.random() * 360);
@@ -25,25 +25,22 @@ public class Asteroid {
         image = images[hp - 1];
     }
 
-    public void update(float dt, int size) {
+    public void update(float dt) {
         position.x -= (int) (speed + dt);
         if (position.x < -50 | hp == 0) {
-            position.x = Gdx.graphics.getWidth()+50;
-            position.y = (float) size / 2 + (Gdx.graphics.getHeight()-size) * (float) Math.random();
-            setSpeed();
-            setScale();
-            rotation = (float) (Math.random() * 360);
-            hp = (int) (1 + Math.random() * 3);
-            image = images[hp - 1];
+            createAsteroid();
         }
     }
 
     public void conflict() {
         hp--;
+        if (hp == 0) {
+            destroy();
+        }
     }
 
     private void setSpeed() {
-        speed = (float) (5.f + Math.random() * 0.f);
+        speed = (float) (5.f + Math.random() * Main.getCountAsteroidDestroy() / 100);
     }
 
     private void setScale() {
@@ -56,5 +53,20 @@ public class Asteroid {
 
     public Vector2 getPosition() {
         return position;
+    }
+
+    public void destroy() {
+        Main.setCountAsteroidDestroy();
+//        createAsteroid();
+    }
+
+    public void createAsteroid() {
+        position.x = (float) (Gdx.graphics.getWidth() + 10 + Math.random() * 100);
+        position.y = (float) SpaceShip.getSize()[1] / 2 + (Gdx.graphics.getHeight() - SpaceShip.getSize()[1]) * (float) Math.random();
+        setSpeed();
+        setScale();
+        rotation = (float) (Math.random() * 360);
+        hp = (int) (1 + Math.random() * 3);
+        image = images[hp - 1];
     }
 }
