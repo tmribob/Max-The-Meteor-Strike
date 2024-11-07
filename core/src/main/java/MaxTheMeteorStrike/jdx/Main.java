@@ -20,18 +20,25 @@ public class Main extends ApplicationAdapter {
     private Star[] stars;
     private Asteroid[] asteroids;
     private String status;
-    private BitmapFont font;
+    private BitmapFont pressEnter;
+    private BitmapFont textAsteroidDestroy;
+    private int countAsteroidDestroy;
+    private float[] opacity;
 
     @Override
     public void create() {
         status = "start";
-        font = new BitmapFont();
+        pressEnter = new BitmapFont();
+        pressEnter.getData().setScale(1.5f,1.5f);
+        textAsteroidDestroy = new BitmapFont();
+        textAsteroidDestroy.getData().setScale(1.5f,1.5f);
         batch = new SpriteBatch();
         stars = new Star[120];
         ship = new SpaceShip();
         bullets = new Bullet[40];
         fire = new FireParticles[100];
-        asteroids = new Asteroid[2];
+        asteroids = new Asteroid[5];
+        opacity = new float[]{0.75f,1.f};
         for (int i = 0; i < stars.length; i++) {
             stars[i] = new Star();
         }
@@ -69,12 +76,13 @@ public class Main extends ApplicationAdapter {
         }
 
         if (status.equals("start")) {
-            font.draw(batch, "Press Enter for start game", (float) Gdx.graphics.getWidth() / 2, (float) Gdx.graphics.getHeight() / 2);
+            pressEnter.draw(batch, "Press Enter for start game", (float) Gdx.graphics.getWidth() / 2, (float) Gdx.graphics.getHeight() / 2);
         }
         if (status.equals("start") && Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
             status = "playing";
         }
         if (status.equals("playing")) {
+            textAsteroidDestroy.draw(batch, "Asteroid destroyed :"+countAsteroidDestroy, (float) Gdx.graphics.getWidth() -250, (float) Gdx.graphics.getHeight() -25);
             for (Bullet b : bullets) {
                 if (b.isAvailable()) {
                     b.render(batch);
@@ -102,6 +110,18 @@ public class Main extends ApplicationAdapter {
                 particle.update(dt);
             }
         }
+        if(opacity[1]==1.f){
+            opacity[0]-=0.025f;
+        }else {
+            opacity[0]+=0.025f;
+        }
+        if(opacity[0]>0.75f){
+            opacity[1]=1.f;
+        }
+        if(opacity[0]<0.25f){
+            opacity[1]=0.f;
+        }
+        pressEnter.setColor(1, 1, 1, opacity[0]);
         if (status.equals("playing")) {
             for (Bullet b : bullets) {
                 if (b.isAvailable()) {
@@ -123,7 +143,7 @@ public class Main extends ApplicationAdapter {
         for (Asteroid asteroid : asteroids) {
             if (bullet.getPosition().dst(asteroid.getPosition()) < 48) {
                 bullet.setAvailable(false);
-                asteroid.conflict();
+                countAsteroidDestroy+=asteroid.conflict();
                 return;
             }
         }

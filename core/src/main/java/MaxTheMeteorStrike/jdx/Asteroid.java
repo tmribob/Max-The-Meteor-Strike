@@ -38,8 +38,9 @@ public class Asteroid {
         }
     }
 
-    public void conflict() {
+    public int conflict() {
         hp--;
+        return hp==0?1:0;
     }
 
     private void setSpeed() {
