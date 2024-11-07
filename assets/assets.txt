@@ -1,10 +1,14 @@
 asteroidGreen.png
 asteroidPurple.png
 asteroidRed.png
+background.mp3
 broken.png
 bullet.png
 damage1.png
 damage2.png
 damage3.png
+destroy.mp3
+laser.mp3
+records.txt
 ship.png
 star.png

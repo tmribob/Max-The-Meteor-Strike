@@ -14,8 +14,10 @@ public class Asteroid {
     private int hp;
     private Texture image;
 
-    private static final Texture[] images = new Texture[]{new Texture("asteroidPurple.png"),
-        new Texture("asteroidGreen.png"), new Texture("asteroidRed.png")};
+    private static final Texture[] images = new Texture[]{
+        new Texture("asteroidPurple.png"),
+        new Texture("asteroidGreen.png"),
+        new Texture("asteroidRed.png")};
 
     public Asteroid() {
         position = new Vector2();
@@ -59,7 +61,6 @@ public class Asteroid {
 
     public void destroy() {
         Main.setCountAsteroidDestroy();
-//        createAsteroid();
     }
 
     public void createAsteroid() {

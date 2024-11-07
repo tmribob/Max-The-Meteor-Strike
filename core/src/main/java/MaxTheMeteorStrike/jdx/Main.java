@@ -3,10 +3,16 @@ package MaxTheMeteorStrike.jdx;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.ScreenUtils;
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 
 /**
@@ -23,6 +29,10 @@ public class Main extends ApplicationAdapter {
     private BitmapFont textField;
     private static int countAsteroidDestroy;
     private float[] opacity;
+    private static int maxRecord;
+    private Sound laser;
+    private Sound destroy;
+    private Music music;
 
     @Override
     public void create() {
@@ -36,6 +46,11 @@ public class Main extends ApplicationAdapter {
         fire = new FireParticles[100];
         asteroids = new Asteroid[50];
         opacity = new float[]{0.75f, 1.f};
+        music = Gdx.audio.newMusic(Gdx.files.internal("background.mp3"));
+        music.play();
+        music.setLooping(true);
+        laser = Gdx.audio.newSound(Gdx.files.internal("laser.mp3"));
+        destroy = Gdx.audio.newSound(Gdx.files.internal("destroy.mp3"));
         for (int i = 0; i < stars.length; i++) {
             stars[i] = new Star();
         }
@@ -48,6 +63,12 @@ public class Main extends ApplicationAdapter {
         for (int i = 0; i < asteroids.length; i++) {
             asteroids[i] = new Asteroid();
         }
+        try (FileInputStream fileIn = new FileInputStream("records.txt")) {
+            maxRecord= fileIn.read();
+        } catch (IOException e) {
+            maxRecord=0;
+            System.err.println(e.getMessage());
+        }
     }
 
     @Override
@@ -58,6 +79,7 @@ public class Main extends ApplicationAdapter {
             status="start";
             ship.setHp(4);
             ship.setPosition();
+            writeRecord();
             for (int i = 0; i < 5 + countAsteroidDestroy / 30; i++){
                 asteroids[i].createAsteroid();
             }
@@ -94,9 +116,12 @@ public class Main extends ApplicationAdapter {
                 opacity[1] = 1.f;
             }
         }
-
         if (status.equals("playing")) {
-            textField.draw(batch, "Asteroid destroyed :" + countAsteroidDestroy, (float) Gdx.graphics.getWidth() - 250, (float) Gdx.graphics.getHeight() - 25);
+            if(countAsteroidDestroy>maxRecord){
+                maxRecord=countAsteroidDestroy;
+            }
+            textField.draw(batch, "Asteroid destroyed: " + countAsteroidDestroy, (float) Gdx.graphics.getWidth() - 250, (float) Gdx.graphics.getHeight() - 25);
+            textField.draw(batch, "Max record: " + maxRecord, (float) Gdx.graphics.getWidth() - 250, (float) Gdx.graphics.getHeight() - 50);
             for (Bullet b : bullets) {
                 if (b.isAvailable()) {
                     b.render(batch);
@@ -112,10 +137,13 @@ public class Main extends ApplicationAdapter {
     @Override
     public void dispose() {
         batch.dispose();
+        music.dispose();
+        laser.dispose();
+        destroy.dispose();
     }
 
     public void update(float dt) {
-        ship.update(dt);
+        ship.update(dt,laser);
         for (Star star : stars) {
             star.update(dt);
         }
@@ -176,7 +204,7 @@ public class Main extends ApplicationAdapter {
                 && ((Math.abs((asteroid.getPosition().y + (float) asteroid.getH() / 2) - (ship.getPosition().y + (float) SpaceShip.getSize()[1] / 2)))
                 <= (float) SpaceShip.getSize()[1] / 2)){
 
-            ship.getDamage();
+            ship.getDamage(destroy);
             asteroid.createAsteroid();
         }
 
@@ -194,5 +222,12 @@ public class Main extends ApplicationAdapter {
         return status;
     }
 
-
+    private static void writeRecord(){
+        try (FileOutputStream fileOut = new FileOutputStream("records.txt")) {
+            fileOut.write(maxRecord);
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+        }
+    }
 }
+
