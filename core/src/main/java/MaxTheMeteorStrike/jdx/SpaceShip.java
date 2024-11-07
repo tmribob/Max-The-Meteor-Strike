@@ -2,6 +2,7 @@ package MaxTheMeteorStrike.jdx;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
@@ -23,7 +24,7 @@ public class SpaceShip {
 
     SpaceShip() {
         hp = 5;
-        getDamage();
+        getDamage(null);
         position = new Vector2(shipImg.getWidth() + 30, (float) Gdx.graphics.getHeight() / 2);
         speed = 400;
         fireRate = 0.2f;
@@ -34,7 +35,7 @@ public class SpaceShip {
         batch.draw(shipImg, position.x - ((float) shipImg.getWidth() / 2), position.y - ((float) shipImg.getHeight() / 2));
     }
 
-    public void update(float dt) {
+    public void update(float dt, Sound laser) {
         if (hp == 0 && position.y > -1 * ((float) shipImg.getHeight() / 2)) {
             position.x += speed * dt;
             position.y -= speed * dt;
@@ -61,6 +62,7 @@ public class SpaceShip {
                 fireTime += dt;
                 if (fireTime > fireRate) {
                     fireTime -= fireRate;
+                    laser.play(1.f);
                     fire();
                 }
             }
@@ -84,9 +86,12 @@ public class SpaceShip {
         return new int[]{shipImg.getWidth(), shipImg.getHeight()};
     }
 
-    public void getDamage() {
+    public void getDamage(Sound destroy) {
         hp--;
         shipImg = shipImages[4 - hp];
+        if(hp==0){
+            destroy.play(1.f);
+        }
     }
 
     public int getHp() {
