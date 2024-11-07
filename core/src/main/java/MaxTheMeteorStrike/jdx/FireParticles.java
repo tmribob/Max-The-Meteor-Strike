@@ -8,12 +8,12 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 public class FireParticles {
-    private static final int size = 2;
+    private static final int size = 4;
     private final Texture fireTex;
     private final Vector2 position;
     private float range; // на сколько далеко улетела частичка
-    private static final int maxRange = 20; // максимальное расстояние, на которое может отлететь частичка
-    private static final int speed = 50;
+    private static final int maxRange = 30; // максимальное расстояние, на которое может отлететь частичка
+    private static final int speed = 90;
     private boolean visible; // активна частица или нет
 
     FireParticles(){
@@ -51,7 +51,4 @@ public class FireParticles {
         return visible;
     }
 
-    public void dispose(){
-        fireTex.dispose();
-    }
 }

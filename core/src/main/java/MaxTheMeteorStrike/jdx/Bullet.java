@@ -35,7 +35,15 @@ public class Bullet {
         available = true;
     }
 
+    public Vector2 getPosition() {
+        return position;
+    }
+
     public boolean isAvailable() {
         return available;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
     }
 }
