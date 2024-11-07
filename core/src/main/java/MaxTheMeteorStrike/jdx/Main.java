@@ -19,7 +19,7 @@ public class Main extends ApplicationAdapter {
     private static FireParticles[] fire;
     private Star[] stars;
     private Asteroid[] asteroids;
-    private String status;
+    private static String  status;
     private BitmapFont textField;
     private static int countAsteroidDestroy;
     private float[] opacity;
@@ -54,7 +54,19 @@ public class Main extends ApplicationAdapter {
     public void render() {
         ScreenUtils.clear(0, 0, 0, 1f);
         float dt = Gdx.graphics.getDeltaTime();
+        if (ship.getPosition().y < 0){
+            status="start";
+            ship.setHp(4);
+            ship.setPosition();
+        }
         update(dt);
+        if (ship.getHp() == 0){
+            status="end";
+            countAsteroidDestroy=0;
+            for (Bullet b : bullets){
+                b.setAvailable(false);
+            }
+        }
         for (int i = 0; i < MathUtils.random(0, fire.length); i++) {
             if (!fire[i].isVisible()) {
                 fire[i].setPosition(ship.getPosition(), SpaceShip.getSize());
@@ -113,11 +125,11 @@ public class Main extends ApplicationAdapter {
         if (status.equals("playing")) {
             for (Bullet b : bullets) {
                 if (b.isAvailable()) {
-                    checkConflict(b);
                     b.update(dt);
                 }
             }
             for (int i = 0; i < 5 + countAsteroidDestroy / 30; i++) {
+                checkConflict(asteroids[i]);
                 asteroids[i].update(dt);
             }
         }
@@ -142,8 +154,13 @@ public class Main extends ApplicationAdapter {
         return bullets;
     }
 
-    private void checkConflict(Bullet bullet) {
-        for (Asteroid asteroid : asteroids) {
+    private void checkConflict(Asteroid asteroid) {
+        if (ship.getPosition().dst(asteroid.getPosition()) < SpaceShip.getSize()[1]){
+            ship.getDamage();
+            asteroid.createAsteroid();
+            return;
+        }
+        for (Bullet bullet : bullets) {
             if (bullet.getPosition().dst(asteroid.getPosition()) < 48) {
                 bullet.setAvailable(false);
                 asteroid.conflict();
@@ -159,4 +176,10 @@ public class Main extends ApplicationAdapter {
     public static int getCountAsteroidDestroy() {
         return countAsteroidDestroy;
     }
+
+    public static String getStatus(){
+        return status;
+    }
+
+
 }

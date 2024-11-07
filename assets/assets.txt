@@ -1,5 +1,10 @@
 asteroidGreen.png
 asteroidPurple.png
 asteroidRed.png
+broken.png
 bullet.png
+damage1.png
+damage2.png
+damage3.png
 ship.png
+star.png
