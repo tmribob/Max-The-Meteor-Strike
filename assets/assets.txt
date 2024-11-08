@@ -5,6 +5,7 @@ audio/background.mp3
 audio/conflict.mp3
 audio/destroy.mp3
 audio/explode.mp3
+audio/heal.mp3
 audio/laser.mp3
 bullet.png
 medicine.jpg

@@ -9,9 +9,8 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
+import java.util.Scanner;
 
 
 /**
@@ -35,6 +34,7 @@ public class Main extends ApplicationAdapter {
     private Music music;
     private Sound conflict;
     private Sound explode;
+    private Sound heal;
 
     @Override
     public void create() {
@@ -53,6 +53,7 @@ public class Main extends ApplicationAdapter {
         conflict = Gdx.audio.newSound(Gdx.files.internal("audio/conflict.mp3"));
         destroy = Gdx.audio.newSound(Gdx.files.internal("audio/destroy.mp3"));
         explode = Gdx.audio.newSound(Gdx.files.internal("audio/explode.mp3"));
+        heal = Gdx.audio.newSound(Gdx.files.internal("audio/heal.mp3"));
         music = Gdx.audio.newMusic(Gdx.files.internal("audio/background.mp3"));
         music.play();
         music.setLooping(true);
@@ -69,10 +70,10 @@ public class Main extends ApplicationAdapter {
         for (int i = 0; i < asteroids.length; i++) {
             asteroids[i] = new Asteroid();
         }
-        try (FileInputStream fileIn = new FileInputStream("records.txt")) {
-            maxRecord = fileIn.read();
-        } catch (IOException e) {
-            maxRecord = 0;
+        try (Scanner scanner = new Scanner(new File("records.txt"))){
+            maxRecord = scanner.nextInt();
+        }catch (IOException e){
+            maxRecord=0;
             System.err.println(e.getMessage());
         }
     }
@@ -194,21 +195,22 @@ public class Main extends ApplicationAdapter {
                 return;
             }
         }
-        if (Math.pow((asteroid.getPosition().x -ship.getPosition().x)/ (asteroid.getW()*1.5f + SpaceShip.getSize()[0]), 2)
-            + Math.pow((asteroid.getPosition().y - ship.getPosition().y) / (asteroid.getH()*1.5f + SpaceShip.getSize()[1]), 2)
+        if (Math.pow((asteroid.getPosition().x - ship.getPosition().x) / (asteroid.getW() * 1.5f + SpaceShip.getSize()[0]), 2)
+            + Math.pow((asteroid.getPosition().y - ship.getPosition().y) / (asteroid.getH() * 1.5f + SpaceShip.getSize()[1]), 2)
             <= 0.25f) {
-                ship.getDamage(destroy);
-                conflict.play(1);
-                asteroid.createAsteroid();
+            ship.getDamage(destroy);
+            conflict.play(1);
+            asteroid.createAsteroid();
         }
 
     }
 
     public void checkMedicine() {
-        if (Math.pow((medicine.getPosition().x -ship.getPosition().x)/ (medicine.getW()*1.5f + SpaceShip.getSize()[0]), 2)
-            + Math.pow((medicine.getPosition().y - ship.getPosition().y) / (medicine.getH()*1.5f + SpaceShip.getSize()[1]), 2)
+        if (Math.pow((medicine.getPosition().x - ship.getPosition().x) / (medicine.getW() * 1.5f + SpaceShip.getSize()[0]), 2)
+            + Math.pow((medicine.getPosition().y - ship.getPosition().y) / (medicine.getH() * 1.5f + SpaceShip.getSize()[1]), 2)
             <= 0.25f) {
             ship.heal();
+            heal.play(1);
             medicine.setHide(true);
         }
     }
@@ -222,8 +224,8 @@ public class Main extends ApplicationAdapter {
     }
 
     private static void writeRecord() {
-        try (FileOutputStream fileOut = new FileOutputStream("records.txt")) {
-            fileOut.write(maxRecord);
+        try(FileWriter wr = new FileWriter("records.txt")) {
+            wr.write(""+maxRecord);
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
