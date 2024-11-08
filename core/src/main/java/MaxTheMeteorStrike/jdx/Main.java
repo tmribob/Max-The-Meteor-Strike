@@ -40,7 +40,7 @@ public class Main extends ApplicationAdapter {
         textField = new BitmapFont();
         textField.getData().setScale(1.5f, 1.5f);
         batch = new SpriteBatch();
-        stars = new Star[120];
+        stars = new Star[170];
         ship = new SpaceShip();
         bullets = new Bullet[40];
         fire = new FireParticles[100];

@@ -32,11 +32,11 @@ public class Star {
     }
 
     private void setSpeed() {
-        speed = (float) (10.f + Math.random() * 15.f);
+        speed = (float) (15.f + Math.random() * 15.f);
     }
 
     private void setScale() {
-        scale = (float) (0.75f + Math.random() * 0.5f);
+        scale = (float) (0.3f + Math.random() * 0.25f);
     }
 
     public void render(SpriteBatch batch) {
