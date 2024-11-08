@@ -7,7 +7,6 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 import java.io.FileInputStream;
@@ -48,13 +47,14 @@ public class Main extends ApplicationAdapter {
         fire = new FireParticles[100];
         asteroids = new Asteroid[50];
         opacity = new float[]{0.75f, 1.f};
-        music = Gdx.audio.newMusic(Gdx.files.internal("background.mp3"));
+        laser = Gdx.audio.newSound(Gdx.files.internal("audio/laser.mp3"));
+        conflict = Gdx.audio.newSound(Gdx.files.internal("audio/conflict.mp3"));
+        destroy = Gdx.audio.newSound(Gdx.files.internal("audio/destroy.mp3"));
+        explode = Gdx.audio.newSound(Gdx.files.internal("audio/explode.mp3"));
+        music = Gdx.audio.newMusic(Gdx.files.internal("audio/background.mp3"));
         music.play();
         music.setLooping(true);
-        laser = Gdx.audio.newSound(Gdx.files.internal("laser.mp3"));
-        conflict = Gdx.audio.newSound(Gdx.files.internal("conflict.mp3"));
-        destroy = Gdx.audio.newSound(Gdx.files.internal("destroy.mp3"));
-        explode = Gdx.audio.newSound(Gdx.files.internal("explode.mp3"));
+        FireParticles.setColor();
         for (int i = 0; i < stars.length; i++) {
             stars[i] = new Star();
         }
@@ -79,28 +79,8 @@ public class Main extends ApplicationAdapter {
     public void render() {
         ScreenUtils.clear(0, 0, 0, 1f);
         float dt = Gdx.graphics.getDeltaTime();
-        if (ship.getPosition().y < 0){
-            status="start";
-            ship.setHp(4);
-            ship.setPosition();
-            writeRecord();
-            for (int i = 0; i < 5 + countAsteroidDestroy / 30; i++){
-                asteroids[i].createAsteroid();
-            }
-        }
         update(dt);
-        if (ship.getHp() == 0){
-            status="end";
-            countAsteroidDestroy=0;
-            for (Bullet b : bullets){
-                b.setAvailable(false);
-            }
-        }
-        for (int i = 0; i < MathUtils.random(0, fire.length); i++) {
-            if (!fire[i].isVisible()) {
-                fire[i].setPosition(ship.getPosition(), SpaceShip.getSize());
-            }
-        }
+
         batch.begin();
         for (Star star : stars) {
             star.render(batch);
@@ -147,6 +127,23 @@ public class Main extends ApplicationAdapter {
     }
 
     public void update(float dt) {
+        if (ship.getPosition().y < 0){
+            status="start";
+            ship.recoveryShip();
+            writeRecord();
+            for (Bullet b : bullets){
+                b.setAvailable(false);
+            }
+            for (int i = 0; i < 5 + countAsteroidDestroy / 30; i++){
+                asteroids[i].createAsteroid();
+            }
+            countAsteroidDestroy=0;
+        }
+//        for (int i = 0; i < Math.random() * fire.length; i++) {
+//            if (!fire[i].isVisible()) {
+//                fire[i].setPosition(ship.getPosition(), SpaceShip.getSize(), ship.getHp());
+//            }
+//        }
         ship.update(dt,laser);
         for (Star star : stars) {
             star.update(dt);
@@ -155,9 +152,12 @@ public class Main extends ApplicationAdapter {
             if (particle.isVisible()) {
                 particle.update(dt);
             }
+            else {
+                particle.setPosition(ship.getPosition(), SpaceShip.getSize(),ship.getHp());
+            }
         }
         if (status.equals("start")) {
-            updateStart();
+            updateOpacity();
         }
         if (status.equals("playing")) {
             for (int i = 0; i < 5 + countAsteroidDestroy / 30; i++) {
@@ -172,7 +172,7 @@ public class Main extends ApplicationAdapter {
         }
     }
 
-    public void updateStart() {
+    public void updateOpacity() {
         if (opacity[1] == 1.f) {
             opacity[0] -= 0.025f;
         } else {
@@ -223,16 +223,16 @@ public class Main extends ApplicationAdapter {
         return countAsteroidDestroy;
     }
 
-    public static String getStatus(){
-        return status;
-    }
-
     private static void writeRecord(){
         try (FileOutputStream fileOut = new FileOutputStream("records.txt")) {
             fileOut.write(maxRecord);
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
+    }
+
+    public static void setStatus(String status) {
+        Main.status = status;
     }
 }
 
