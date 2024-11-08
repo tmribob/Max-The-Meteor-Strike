@@ -1,6 +1,7 @@
 package MaxTheMeteorStrike.jdx;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
@@ -35,10 +36,11 @@ public class Asteroid {
         }
     }
 
-    public void conflict() {
+    public void conflict(Sound explode) {
         hp--;
         if (hp == 0) {
-            destroy();
+            explode.play(1.f);
+            Main.setCountAsteroidDestroy();
         }
     }
 
@@ -57,10 +59,6 @@ public class Asteroid {
 
     public Vector2 getPosition() {
         return position;
-    }
-
-    public void destroy() {
-        Main.setCountAsteroidDestroy();
     }
 
     public void createAsteroid() {

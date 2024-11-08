@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 public class SpaceShip {
@@ -62,7 +63,8 @@ public class SpaceShip {
                 fireTime += dt;
                 if (fireTime > fireRate) {
                     fireTime -= fireRate;
-                    laser.play(1.f);
+                    long sound = laser.play(0.1f);
+                    laser.setPitch(sound, MathUtils.random(0.8f, 1.2f));
                     fire();
                 }
             }
@@ -89,8 +91,8 @@ public class SpaceShip {
     public void getDamage(Sound destroy) {
         hp--;
         shipImg = shipImages[4 - hp];
-        if(hp==0){
-            destroy.play(1.f);
+        if (hp == 0) {
+            destroy.play(0.1f);
         }
     }
 

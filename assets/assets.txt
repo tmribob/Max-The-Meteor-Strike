@@ -4,10 +4,12 @@ asteroidRed.png
 background.mp3
 broken.png
 bullet.png
+conflict.mp3
 damage1.png
 damage2.png
 damage3.png
 destroy.mp3
+explode.mp3
 laser.mp3
 records.txt
 ship.png

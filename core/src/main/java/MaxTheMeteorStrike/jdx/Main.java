@@ -33,6 +33,8 @@ public class Main extends ApplicationAdapter {
     private Sound laser;
     private Sound destroy;
     private Music music;
+    private Sound conflict;
+    private Sound explode;
 
     @Override
     public void create() {
@@ -50,7 +52,9 @@ public class Main extends ApplicationAdapter {
         music.play();
         music.setLooping(true);
         laser = Gdx.audio.newSound(Gdx.files.internal("laser.mp3"));
+        conflict = Gdx.audio.newSound(Gdx.files.internal("conflict.mp3"));
         destroy = Gdx.audio.newSound(Gdx.files.internal("destroy.mp3"));
+        explode = Gdx.audio.newSound(Gdx.files.internal("explode.mp3"));
         for (int i = 0; i < stars.length; i++) {
             stars[i] = new Star();
         }
@@ -196,7 +200,7 @@ public class Main extends ApplicationAdapter {
                 (Math.abs((asteroid.getPosition().y + (float) asteroid.getH() / 2) - (bullet.getPosition().y + (float) bullet.getH() / 2))
                     < (float) asteroid.getH())){
                 bullet.setAvailable(false);
-                asteroid.conflict();
+                asteroid.conflict(explode);
                 return;
             }
         }
@@ -205,6 +209,7 @@ public class Main extends ApplicationAdapter {
                 <= (float) SpaceShip.getSize()[1] / 2)){
 
             ship.getDamage(destroy);
+            conflict.play(1);
             asteroid.createAsteroid();
         }
 
