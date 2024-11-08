@@ -102,7 +102,7 @@ public class SpaceShip {
         }
         if (hp == 0) {
             isDestroy = true;
-            Main.setStatus("end");
+            Main.ending();
             destroy.play(0.1f);
         }
     }
@@ -117,5 +117,11 @@ public class SpaceShip {
 
     public int getHp() {
         return hp;
+    }
+    public void heal(){
+        if(hp<4){
+            hp++;
+            shipImg = shipImages[4 - hp];
+        }
     }
 }

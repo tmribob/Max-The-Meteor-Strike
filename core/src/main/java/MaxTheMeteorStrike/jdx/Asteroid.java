@@ -25,30 +25,6 @@ public class Asteroid {
         createAsteroid();
     }
 
-    public void update(float dt) {
-        position.x -= (int) (speed + dt);
-        if (position.x < -50 || hp == 0) {
-            createAsteroid();
-        }
-    }
-
-    public void conflict(Sound explode) {
-        hp--;
-        if (hp == 0) {
-            explode.play(1.f);
-            Main.setCountAsteroidDestroy();
-        }
-    }
-
-    public void render(SpriteBatch batch) {
-        batch.draw(image, position.x - (float) image.getWidth() / 2, position.y - (float) image.getHeight() / 2, (float) image.getWidth() / 2, (float) image.getHeight() / 2,
-                    image.getWidth(), image.getHeight(), scale, scale, rotation, 0, 0, image.getWidth(), image.getHeight(), false, false);
-    }
-
-    public Vector2 getPosition() {
-        return position;
-    }
-
     public void createAsteroid() {
         hp = MathUtils.random(1,3);
         image = images[hp - 1];
@@ -59,11 +35,35 @@ public class Asteroid {
         rotation = (float) (Math.random() * 360);
     }
 
-    public int getW(){
+    public void update(float dt) {
+        position.x -= (int) (speed + dt);
+        if (position.x < -50 || hp == 0) {
+            createAsteroid();
+        }
+    }
+
+    public void render(SpriteBatch batch) {
+        batch.draw(image, position.x - (float) image.getWidth() / 2, position.y - (float) image.getHeight() / 2, (float) image.getWidth() / 2, (float) image.getHeight() / 2,
+                    image.getWidth(), image.getHeight(), scale, scale, rotation, 0, 0, image.getWidth(), image.getHeight(), false, false);
+    }
+
+    public void conflict(Sound explode) {
+        hp--;
+        if (hp == 0) {
+            explode.play(1.f);
+            Main.setCountAsteroidDestroy();
+        }
+    }
+
+    public Vector2 getPosition() {
+        return position;
+    }
+
+    public float getW(){
         return image.getWidth();
     }
 
-    public int getH(){
+    public float getH(){
         return image.getHeight();
     }
 
