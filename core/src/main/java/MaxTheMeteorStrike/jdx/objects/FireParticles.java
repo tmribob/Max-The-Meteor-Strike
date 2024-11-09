@@ -1,4 +1,4 @@
-package MaxTheMeteorStrike.jdx;
+package MaxTheMeteorStrike.jdx.objects;
 
 
 import com.badlogic.gdx.graphics.Pixmap;
@@ -31,7 +31,7 @@ public class FireParticles {
         fireTex = new Texture[]{new Texture(fireParticle1), new Texture(fireParticle2), new Texture(fireParticle3)};
     }
 
-    FireParticles() {
+    public FireParticles() {
         position = new Vector2(0, 0);
         visible = false;
         count = 0;

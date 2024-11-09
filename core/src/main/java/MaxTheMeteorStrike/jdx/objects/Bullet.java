@@ -1,4 +1,4 @@
-package MaxTheMeteorStrike.jdx;
+package MaxTheMeteorStrike.jdx.objects;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -11,7 +11,7 @@ public class Bullet {
     private static int speed;
     private boolean available;
 
-    Bullet(){
+    public Bullet(){
         position = new Vector2(0, Gdx.graphics.getHeight());
         speed = 800;
         available = false;

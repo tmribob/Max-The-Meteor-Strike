@@ -1,5 +1,6 @@
 package MaxTheMeteorStrike.jdx;
 
+import MaxTheMeteorStrike.jdx.objects.*;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;

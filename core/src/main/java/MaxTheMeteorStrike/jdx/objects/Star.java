@@ -1,4 +1,4 @@
-package MaxTheMeteorStrike.jdx;
+package MaxTheMeteorStrike.jdx.objects;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;

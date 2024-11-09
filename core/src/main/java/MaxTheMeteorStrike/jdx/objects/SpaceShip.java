@@ -1,5 +1,6 @@
-package MaxTheMeteorStrike.jdx;
+package MaxTheMeteorStrike.jdx.objects;
 
+import MaxTheMeteorStrike.jdx.Main;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
@@ -25,7 +26,7 @@ public class SpaceShip {
         new Texture("spaceShip/broken.png")};
 
 
-    SpaceShip() {
+    public SpaceShip() {
         fireRate = 0.2f;
         position = new Vector2();
         recoveryShip();

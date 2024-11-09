@@ -1,5 +1,6 @@
-package MaxTheMeteorStrike.jdx;
+package MaxTheMeteorStrike.jdx.objects;
 
+import MaxTheMeteorStrike.jdx.Main;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
