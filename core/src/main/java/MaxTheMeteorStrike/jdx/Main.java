@@ -7,6 +7,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 import java.io.*;
@@ -18,7 +19,7 @@ import java.util.Scanner;
  */
 public class Main extends ApplicationAdapter {
     private SpriteBatch batch;
-    private SpaceShip ship;
+    private static SpaceShip ship;
     private static Bullet[] bullets;
     private static FireParticles[] fire;
     private static Star[] stars;
@@ -29,7 +30,8 @@ public class Main extends ApplicationAdapter {
     private static int countAsteroidDestroy;
     private float[] opacity;
     private static int maxRecord;
-    private Sound laser;
+    private static Sound laser;
+    private static long soundLaser;
     private Sound destroy;
     private Music music;
     private Sound conflict;
@@ -50,6 +52,7 @@ public class Main extends ApplicationAdapter {
         medicine = new Medicine();
         opacity = new float[]{0.75f, 1.f};
         laser = Gdx.audio.newSound(Gdx.files.internal("audio/laser.mp3"));
+        soundLaser = laser.play(0.1f);
         conflict = Gdx.audio.newSound(Gdx.files.internal("audio/conflict.mp3"));
         destroy = Gdx.audio.newSound(Gdx.files.internal("audio/destroy.mp3"));
         explode = Gdx.audio.newSound(Gdx.files.internal("audio/explode.mp3"));
@@ -70,10 +73,10 @@ public class Main extends ApplicationAdapter {
         for (int i = 0; i < asteroids.length; i++) {
             asteroids[i] = new Asteroid();
         }
-        try (Scanner scanner = new Scanner(new File("records.txt"))){
+        try (Scanner scanner = new Scanner(new File("records.txt"))) {
             maxRecord = scanner.nextInt();
-        }catch (IOException e){
-            maxRecord=0;
+        } catch (IOException e) {
+            maxRecord = 0;
             System.err.println(e.getMessage());
         }
     }
@@ -95,10 +98,6 @@ public class Main extends ApplicationAdapter {
         ship.render(batch);
         if (status.equals("start")) {
             textField.draw(batch, "Press Enter for start game", (float) Gdx.graphics.getWidth() / 2, (float) Gdx.graphics.getHeight() / 2);
-            if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
-                status = "playing";
-                opacity[1] = 1.f;
-            }
         }
         if (status.equals("playing")) {
             if (countAsteroidDestroy > maxRecord) {
@@ -127,6 +126,9 @@ public class Main extends ApplicationAdapter {
         music.dispose();
         laser.dispose();
         destroy.dispose();
+        heal.dispose();
+        explode.dispose();
+        conflict.dispose();
     }
 
     public void update(float dt) {
@@ -135,7 +137,7 @@ public class Main extends ApplicationAdapter {
             ship.recoveryShip();
             countAsteroidDestroy = 0;
         }
-        ship.update(dt, laser);
+        ship.update(dt);
         for (Star star : stars) {
             star.update(dt);
         }
@@ -159,28 +161,28 @@ public class Main extends ApplicationAdapter {
                     b.update(dt);
                 }
             }
-            if (((int) (Math.random() * 5000) == 252) && medicine.isHide()) {
-                medicine.setHide(false);
-            }
             if (!medicine.isHide()) {
                 medicine.update(dt);
                 checkMedicine();
+            } else if ((int) (Math.random() * 5000) == 252) {
+                medicine.setHide(false);
             }
         }
     }
 
     public void updateOpacity() {
+        if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
+            status = "playing";
+            opacity[1] = 1.f;
+            return;
+        }
         if (opacity[0] * (opacity[0] - 1) + (float) 3 / 16 > 0) {
             opacity[1] = opacity[1] * (-1);
         }
         opacity[0] += 0.025f * opacity[1];
-
         textField.setColor(1, 1, 1, opacity[0]);
     }
 
-    public static Bullet[] getBullets() {
-        return bullets;
-    }
 
     private void checkConflict(Asteroid asteroid) {
         for (Bullet bullet : bullets) {
@@ -224,8 +226,8 @@ public class Main extends ApplicationAdapter {
     }
 
     private static void writeRecord() {
-        try(FileWriter wr = new FileWriter("records.txt")) {
-            wr.write(""+maxRecord);
+        try (FileWriter wr = new FileWriter("records.txt")) {
+            wr.write("" + maxRecord);
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
@@ -239,6 +241,19 @@ public class Main extends ApplicationAdapter {
         }
         for (int i = 0; i < 5 + countAsteroidDestroy / 30; i++) {
             asteroids[i].createAsteroid();
+        }
+    }
+
+    public static void fire() {
+        if (status.equals("playing")) {
+            for (Bullet b : bullets) {
+                if (!b.isAvailable()) {
+                    b.setup(ship.getPosition());
+                    laser.play(0.1f);
+                    laser.setPitch(soundLaser, MathUtils.random(0.8f, 1.2f));
+                    break;
+                }
+            }
         }
     }
 }

@@ -5,8 +5,8 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+
 
 public class SpaceShip {
     private final Vector2 position;
@@ -42,7 +42,7 @@ public class SpaceShip {
 
     }
 
-    public void update(float dt, Sound laser) {
+    public void update(float dt) {
         if (isDestroy && position.y > -1 * ((float) shipImg.getHeight() / 2)) {
             position.x += speed * dt;
             position.y -= speed * dt;
@@ -65,26 +65,17 @@ public class SpaceShip {
                 if (position.y > (float) shipImg.getHeight() / 2)
                     position.y -= speed * dt;
             }
-            if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+            if (Gdx.input.isKeyPressed(Input.Keys.SPACE) ) {
                 fireTime += dt;
                 if (fireTime > fireRate) {
                     fireTime -= fireRate;
-                    long sound = laser.play(0.1f);
-                    laser.setPitch(sound, MathUtils.random(0.8f, 1.2f));
-                    fire();
+                    Main.fire();
                 }
             }
         }
     }
 
-    private void fire() {
-        for (Bullet b : Main.getBullets()) {
-            if (!b.isAvailable()) {
-                b.setup(position);
-                break;
-            }
-        }
-    }
+
 
     public Vector2 getPosition() {
         return position;
