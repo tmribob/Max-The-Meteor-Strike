@@ -47,7 +47,7 @@ public class Main extends ApplicationAdapter {
         textField.getData().setScale(1.5f, 1.5f);
         batch = new SpriteBatch();
         ship = new SpaceShip();
-        stars = new Star[170];
+        stars = new Star[200];
         bullets = new Bullet[40];
         fire = new FireParticles[100];
         asteroids = new Asteroid[50];
@@ -127,17 +127,6 @@ public class Main extends ApplicationAdapter {
         batch.end();
     }
 
-    @Override
-    public void dispose() {
-        batch.dispose();
-        music.dispose();
-        laser.dispose();
-        destroy.dispose();
-        heal.dispose();
-        explode.dispose();
-        conflict.dispose();
-    }
-
     public void update(float dt) {
         if (ship.getPosition().y < 0) {
             status = "start";
@@ -183,7 +172,7 @@ public class Main extends ApplicationAdapter {
             opacity[1] = 1.f;
             return;
         }
-        if (opacity[0] * (opacity[0] - 1) + (float) 3 / 16 > 0) {
+        if ((opacity[0] - 0.75f) * (opacity[0] - 0.25f) > 0) {
             opacity[1] = opacity[1] * (-1);
         }
         opacity[0] += 0.025f * opacity[1];
@@ -194,17 +183,16 @@ public class Main extends ApplicationAdapter {
     private void checkConflict(Asteroid asteroid) {
         for (Bullet bullet : bullets) {
             if (bullet.isActive()) {
-                if ((bullet.getPosition().x + bullet.getWidth() / 2 >= asteroid.getPosition().x - asteroid.getWidth() / 2) &&
-                    (Math.abs((asteroid.getPosition().y + asteroid.getHeight() / 2) - (bullet.getPosition().y + bullet.getHeight() / 2))
-                        < asteroid.getHeight())) {
+                if (Math.pow(bullet.getPosition().x-asteroid.getPosition().x,2)<Math.pow(asteroid.getWidth(),2)
+                    &&Math.pow(bullet.getPosition().y-asteroid.getPosition().y,2)<Math.pow(asteroid.getHeight(),2)) {
                     bullet.destroy();
                     asteroid.conflict(explode);
                     return;
                 }
             }
         }
-        if (Math.pow((asteroid.getPosition().x - ship.getPosition().x) / (asteroid.getWidth() * 1.5f + ship.getWidth()), 2)
-            + Math.pow((asteroid.getPosition().y - ship.getPosition().y) / (asteroid.getHeight() * 1.5f + ship.getHeight()), 2)
+        if (Math.pow((asteroid.getPosition().x - ship.getPosition().x) / (asteroid.getWidth() * 2 + ship.getWidth()), 2)
+            + Math.pow((asteroid.getPosition().y - ship.getPosition().y) / (asteroid.getHeight() * 2 + ship.getHeight()), 2)
             <= 0.25f) {
             ship.getDamage(destroy);
             conflict.play(1);
@@ -248,8 +236,8 @@ public class Main extends ApplicationAdapter {
         for (Bullet bullet : bullets) {
             bullet.destroy();
         }
-        for (int i = 0; i < 5 + countAsteroidDestroy / 30; i++) {
-            asteroids[i].recreate();
+        for (int i = 0; i < countAsteroid; i++) {
+            asteroids[i].destroy();
         }
     }
 
@@ -264,6 +252,17 @@ public class Main extends ApplicationAdapter {
                 }
             }
         }
+    }
+
+    @Override
+    public void dispose() {
+        batch.dispose();
+        music.dispose();
+        laser.dispose();
+        destroy.dispose();
+        heal.dispose();
+        explode.dispose();
+        conflict.dispose();
     }
 }
 

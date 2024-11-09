@@ -21,10 +21,10 @@ public class CosmicObjects {
         this.hp = hp;
         this.speed = speed;
         this.image = image;
-        width = image.getWidth();
-        height = image.getHeight();
-        position = new Vector2(Gdx.graphics.getWidth() + width / 2, Gdx.graphics.getHeight() + height);
         this.scale = scale;
+        width = image.getWidth()*scale;
+        height = image.getHeight()*scale;
+        position = new Vector2(Gdx.graphics.getWidth() + width / 2, Gdx.graphics.getHeight() + height);
         isActive = false;
         this.rotation = rotation;
     }

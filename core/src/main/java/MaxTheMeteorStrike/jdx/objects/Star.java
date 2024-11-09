@@ -37,10 +37,11 @@ public class Star {
     }
 
     private void setScale() {
-        scale = (float) (0.3f + Math.random() * 0.25f);
+        scale = (float) (0.1f + Math.random() * 0.25f);
     }
 
     public void render(SpriteBatch batch) {
-        batch.draw(image, position.x, position.y, 8, 8, 16, 16, scale, scale, rotation, 0, 0, 32, 32, false, false);
+        batch.draw(image, position.x, position.y, (float) image.getWidth() /2, (float) image.getHeight() /2,
+                image.getWidth(), image.getHeight(), scale, scale, rotation, 0, 0, image.getWidth(), image.getHeight(), false, false);
     }
 }
