@@ -29,6 +29,7 @@ public class Main extends ApplicationAdapter {
     private static String status;
     private BitmapFont textField;
     private static int countAsteroidDestroy;
+    private static int countAsteroid;
     private float[] opacity;
     private static int maxRecord;
     private static Sound laser;
@@ -50,6 +51,7 @@ public class Main extends ApplicationAdapter {
         bullets = new Bullet[40];
         fire = new FireParticles[100];
         asteroids = new Asteroid[50];
+        countAsteroid =5;
         medicine = new Medicine();
         opacity = new float[]{0.75f, 1.f};
         laser = Gdx.audio.newSound(Gdx.files.internal("audio/laser.mp3"));
@@ -72,7 +74,10 @@ public class Main extends ApplicationAdapter {
             fire[i] = new FireParticles();
         }
         for (int i = 0; i < asteroids.length; i++) {
-            asteroids[i] = new Asteroid();
+            asteroids[i] = new Asteroid((byte) MathUtils.random(1,3));
+            if(i<countAsteroid){
+                asteroids[i].setActive(true);
+            }
         }
         try (Scanner scanner = new Scanner(new File("records.txt"))) {
             maxRecord = scanner.nextInt();
@@ -111,7 +116,7 @@ public class Main extends ApplicationAdapter {
                     b.render(batch);
                 }
             }
-            for (int i = 0; i < 5 + countAsteroidDestroy / 30; i++) {
+            for (int i = 0; i<countAsteroid; i++) {
                 asteroids[i].render(batch);
             }
             if (!medicine.isHide()) {
@@ -153,7 +158,7 @@ public class Main extends ApplicationAdapter {
             updateOpacity();
         }
         if (status.equals("playing")) {
-            for (int i = 0; i < 5 + countAsteroidDestroy / 30; i++) {
+            for (int i = 0; i < countAsteroid; i++) {
                 checkConflict(asteroids[i]);
                 asteroids[i].update(dt);
             }
@@ -190,20 +195,20 @@ public class Main extends ApplicationAdapter {
             if (!bullet.isAvailable()) {
                 continue;
             }
-            if ((bullet.getPosition().x + (float) bullet.getW() / 2 >= asteroid.getPosition().x - asteroid.getW() / 2) &&
-                (Math.abs((asteroid.getPosition().y + asteroid.getH() / 2) - (bullet.getPosition().y + (float) bullet.getH() / 2))
-                    < asteroid.getH())) {
+            if ((bullet.getPosition().x + (float) bullet.getW() / 2 >= asteroid.getPosition().x - asteroid.getWidth() / 2) &&
+                (Math.abs((asteroid.getPosition().y + asteroid.getHeight() / 2) - (bullet.getPosition().y + (float) bullet.getH() / 2))
+                    < asteroid.getHeight())) {
                 bullet.setAvailable(false);
                 asteroid.conflict(explode);
                 return;
             }
         }
-        if (Math.pow((asteroid.getPosition().x - ship.getPosition().x) / (asteroid.getW() * 1.5f + SpaceShip.getSize()[0]), 2)
-            + Math.pow((asteroid.getPosition().y - ship.getPosition().y) / (asteroid.getH() * 1.5f + SpaceShip.getSize()[1]), 2)
+        if (Math.pow((asteroid.getPosition().x - ship.getPosition().x) / (asteroid.getWidth() * 1.5f + SpaceShip.getSize()[0]), 2)
+            + Math.pow((asteroid.getPosition().y - ship.getPosition().y) / (asteroid.getHeight() * 1.5f + SpaceShip.getSize()[1]), 2)
             <= 0.25f) {
             ship.getDamage(destroy);
             conflict.play(1);
-            asteroid.createAsteroid();
+            asteroid.recreate();
         }
 
     }
@@ -220,6 +225,9 @@ public class Main extends ApplicationAdapter {
 
     public static void setCountAsteroidDestroy() {
         countAsteroidDestroy++;
+        if (countAsteroidDestroy%30==0){
+            countAsteroid++;
+        }
     }
 
     public static int getCountAsteroidDestroy() {
@@ -241,7 +249,7 @@ public class Main extends ApplicationAdapter {
             b.setAvailable(false);
         }
         for (int i = 0; i < 5 + countAsteroidDestroy / 30; i++) {
-            asteroids[i].createAsteroid();
+            asteroids[i].recreate();
         }
     }
 
