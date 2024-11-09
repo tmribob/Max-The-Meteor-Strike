@@ -26,14 +26,14 @@ public class Star {
         rotation += 5;
         if (position.x < -50) {
             position.x = Gdx.graphics.getWidth();
-            position.y = MathUtils.random(0,Gdx.graphics.getHeight());
+            position.y = MathUtils.random(0, Gdx.graphics.getHeight());
             setSpeed();
             setScale();
         }
     }
 
     private void setSpeed() {
-        speed = (short) MathUtils.random(900,1900);
+        speed = (short) MathUtils.random(900, 1900);
     }
 
     private void setScale() {
@@ -41,7 +41,7 @@ public class Star {
     }
 
     public void render(SpriteBatch batch) {
-        batch.draw(image, position.x, position.y, (float) image.getWidth() /2, (float) image.getHeight() /2,
+        batch.draw(image, position.x, position.y, (float) image.getWidth() / 2, (float) image.getHeight() / 2,
                 image.getWidth(), image.getHeight(), scale, scale, rotation, 0, 0, image.getWidth(), image.getHeight(), false, false);
     }
 }

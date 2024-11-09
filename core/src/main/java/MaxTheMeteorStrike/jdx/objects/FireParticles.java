@@ -58,7 +58,7 @@ public class FireParticles {
 
     }
 
-    public void setPosition(Vector2 position, float width,float height, int hp) {
+    public void setPosition(Vector2 position, float width, float height, int hp) {
         visible = true;
         if (hp == 2 || hp == 1) {
             this.position.set(position.x - width / 2, MathUtils.random(position.y + height / 6, position.y + height / 2));

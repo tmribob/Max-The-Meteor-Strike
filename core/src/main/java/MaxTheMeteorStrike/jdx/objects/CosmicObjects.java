@@ -22,15 +22,15 @@ public class CosmicObjects {
         this.speed = speed;
         this.image = image;
         this.scale = scale;
-        width = image.getWidth()*scale;
-        height = image.getHeight()*scale;
+        width = image.getWidth() * scale;
+        height = image.getHeight() * scale;
         position = new Vector2(Gdx.graphics.getWidth() + width / 2, Gdx.graphics.getHeight() + height);
         isActive = false;
         this.rotation = rotation;
     }
 
     public void update(float dt) {
-        position.x -=  speed * dt;
+        position.x -= speed * dt;
         if (position.x < -width / 2 || hp == 0) {
             destroy();
         }
@@ -62,15 +62,17 @@ public class CosmicObjects {
     public boolean isActive() {
         return isActive;
     }
-    public void destroy(){
-        isActive=false;
-        hp=0;
+
+    public void destroy() {
+        isActive = false;
+        hp = 0;
         position.set(Gdx.graphics.getWidth() + width / 2, Gdx.graphics.getHeight() + height);
 
     }
-    public void revive(){
-        hp=1;
-        isActive=true;
+
+    public void revive() {
+        hp = 1;
+        isActive = true;
         setPosition();
     }
 }

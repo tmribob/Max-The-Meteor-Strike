@@ -26,25 +26,25 @@ public class SpaceShip extends CosmicObjects {
         isDestroy = false;
     }
 
-    public void recoveryShip() {
+    @Override
+    public void revive() {
         hp = 4;
         speed = (short) 400;
         image = shipImages[4 - hp];
         position.set(width + 30, (float) Gdx.graphics.getHeight() / 2);
         isDestroy = false;
-        rotation=0;
+        isActive = true;
+        rotation = 0;
     }
-
 
     @Override
     public void update(float dt) {
         if (isDestroy && position.y > -1 * (height / 2)) {
             position.x += speed * dt;
             position.y -= speed * dt;
-            if(rotation>-45){
+            if (rotation > -45) {
                 rotation--;
             }
-
         }
         if (!isDestroy) {
             if (Gdx.input.isKeyPressed(Input.Keys.D) | Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
@@ -64,11 +64,13 @@ public class SpaceShip extends CosmicObjects {
                     position.y -= speed * dt;
             }
             if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-                fireTime += dt;
-                if (fireTime > fireRate) {
-                    fireTime -= fireRate;
+                if (fireTime < 0) {
                     Main.fire();
+                    fireTime = fireRate;
                 }
+            }
+            if (fireTime >= 0) {
+                fireTime -= dt;
             }
         }
     }
@@ -78,11 +80,11 @@ public class SpaceShip extends CosmicObjects {
         hp--;
         image = shipImages[4 - hp];
         if (hp <= 2) {
-            speed =(short) 300;
+            speed = (short) 300;
         }
         if (hp == 0) {
             isDestroy = true;
-            Main.ending();
+            Main.updateEnd();
             destroy.play(0.1f);
         }
     }
@@ -96,5 +98,11 @@ public class SpaceShip extends CosmicObjects {
             hp++;
             image = shipImages[4 - hp];
         }
+    }
+
+    public boolean checkConflictWithShip(CosmicObjects object) {
+        return Math.pow((object.getPosition().x - position.x) / (object.getWidth() * 2 + width), 2)
+                + Math.pow((object.getPosition().y - position.y) / (object.getHeight() * 2 + height), 2)
+                <= 0.25f;
     }
 }

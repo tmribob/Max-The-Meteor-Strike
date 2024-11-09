@@ -15,7 +15,7 @@ public class Bullet extends CosmicObjects {
     @Override
     public void update(float dt) {
         position.x += speed * dt;
-        if (position.x > Gdx.graphics.getWidth() + width / 2 ) {
+        if (position.x > Gdx.graphics.getWidth() + width / 2) {
             destroy();
         }
     }

@@ -48,7 +48,7 @@ public class Main extends ApplicationAdapter {
         batch = new SpriteBatch();
         ship = new SpaceShip();
         stars = new Star[200];
-        bullets = new Bullet[40];
+        bullets = new Bullet[20];
         fire = new FireParticles[100];
         asteroids = new Asteroid[50];
         countAsteroid = 5;
@@ -91,16 +91,21 @@ public class Main extends ApplicationAdapter {
     public void render() {
         ScreenUtils.clear(0, 0, 0, 1f);
         float dt = Gdx.graphics.getDeltaTime();
-        update(dt);
+        update();
         batch.begin();
         for (Star star : stars) {
+            star.update(dt);
             star.render(batch);
         }
-        for (FireParticles p : fire) {
-            if (p.isVisible()) {
-                p.render(batch);
+        for (FireParticles particle : fire) {
+            if (particle.isVisible()) {
+                particle.render(batch);
+                particle.update(dt);
+            } else {
+                particle.setPosition(ship.getPosition(), ship.getWidth(), ship.getHeight(), ship.getHp());
             }
         }
+        ship.update(dt);
         ship.render(batch);
         if (status.equals("start")) {
             textField.draw(batch, "Press Enter for start game", (float) Gdx.graphics.getWidth() / 2, (float) Gdx.graphics.getHeight() / 2);
@@ -108,108 +113,67 @@ public class Main extends ApplicationAdapter {
         if (status.equals("playing")) {
             if (countAsteroidDestroy > maxRecord) {
                 maxRecord = countAsteroidDestroy;
+                writeRecord();
             }
             textField.draw(batch, "Asteroid destroyed: " + countAsteroidDestroy, (float) Gdx.graphics.getWidth() - 250, (float) Gdx.graphics.getHeight() - 25);
             textField.draw(batch, "Max record: " + maxRecord, (float) Gdx.graphics.getWidth() - 250, (float) Gdx.graphics.getHeight() - 50);
             for (Bullet bullet : bullets) {
                 if (bullet.isActive()) {
-//                    System.err.println(dt);
+                    bullet.update(dt);
                     bullet.render(batch);
                 }
             }
             for (int i = 0; i < countAsteroid; i++) {
+                asteroids[i].update(dt);
+                if (ship.checkConflictWithShip(asteroids[i])) {
+                    ship.getDamage(destroy);
+                    conflict.play(1);
+                    asteroids[i].recreate();
+                    break;
+                }
+                for (Bullet bullet : bullets) {
+                    if (bullet.isActive() && asteroids[i].checkConflictWithAsteroid(bullet, explode)) {
+                        bullet.destroy();
+                        break;
+                    }
+                }
                 asteroids[i].render(batch);
             }
             if (medicine.isActive()) {
+                medicine.update(dt);
+                if (ship.checkConflictWithShip(medicine)) {
+                    ship.heal();
+                    heal.play(1);
+                    medicine.destroy();
+                }
                 medicine.render(batch);
+            } else if ((int) (Math.random() * 2500) == 252) {
+                medicine.revive();
             }
         }
         batch.end();
     }
 
-    public void update(float dt) {
+    public void update() {
         if (ship.getPosition().y < 0) {
             status = "start";
-            ship.recoveryShip();
+            ship.revive();
             countAsteroidDestroy = 0;
         }
-        ship.update(dt);
-        for (Star star : stars) {
-            star.update(dt);
-        }
-        for (FireParticles particle : fire) {
-            if (particle.isVisible()) {
-                particle.update(dt);
-            } else {
-                particle.setPosition(ship.getPosition(), ship.getWidth(), ship.getHeight(), ship.getHp());
-            }
-        }
         if (status.equals("start")) {
-            updateOpacity();
-        }
-        if (status.equals("playing")) {
-            for (int i = 0; i < countAsteroid; i++) {
-                checkConflict(asteroids[i]);
-                asteroids[i].update(dt);
+            if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
+                status = "playing";
+                opacity[1] = 1.f;
+                return;
             }
-            for (Bullet bullet : bullets) {
-                if (bullet.isActive()) {
-                    bullet.update(dt);
-                }
+            if ((opacity[0] - 0.75f) * (opacity[0] - 0.25f) > 0) {
+                opacity[1] = opacity[1] * (-1);
             }
-            if (medicine.isActive()) {
-                medicine.update(dt);
-                checkMedicine();
-            } else if ((int) (Math.random() * 5000) == 252 | countAsteroidDestroy == 30) {
-                medicine.revive();
-            }
+            opacity[0] += 0.025f * opacity[1];
+            textField.setColor(1, 1, 1, opacity[0]);
         }
     }
 
-    public void updateOpacity() {
-        if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
-            status = "playing";
-            opacity[1] = 1.f;
-            return;
-        }
-        if ((opacity[0] - 0.75f) * (opacity[0] - 0.25f) > 0) {
-            opacity[1] = opacity[1] * (-1);
-        }
-        opacity[0] += 0.025f * opacity[1];
-        textField.setColor(1, 1, 1, opacity[0]);
-    }
-
-
-    private void checkConflict(Asteroid asteroid) {
-        for (Bullet bullet : bullets) {
-            if (bullet.isActive()) {
-                if (Math.pow(bullet.getPosition().x-asteroid.getPosition().x,2)<Math.pow(asteroid.getWidth(),2)
-                    &&Math.pow(bullet.getPosition().y-asteroid.getPosition().y,2)<Math.pow(asteroid.getHeight(),2)) {
-                    bullet.destroy();
-                    asteroid.conflict(explode);
-                    return;
-                }
-            }
-        }
-        if (Math.pow((asteroid.getPosition().x - ship.getPosition().x) / (asteroid.getWidth() * 2 + ship.getWidth()), 2)
-            + Math.pow((asteroid.getPosition().y - ship.getPosition().y) / (asteroid.getHeight() * 2 + ship.getHeight()), 2)
-            <= 0.25f) {
-            ship.getDamage(destroy);
-            conflict.play(1);
-            asteroid.recreate();
-        }
-
-    }
-
-    public void checkMedicine() {
-        if (Math.pow((medicine.getPosition().x - ship.getPosition().x) / (medicine.getWidth() * 1.5f + ship.getWidth()), 2)
-            + Math.pow((medicine.getPosition().y - ship.getPosition().y) / (medicine.getHeight() * 1.5f + ship.getHeight()), 2)
-            <= 0.25f) {
-            ship.heal();
-            heal.play(1);
-            medicine.destroy();
-        }
-    }
 
     public static void setCountAsteroidDestroy() {
         countAsteroidDestroy++;
@@ -230,7 +194,7 @@ public class Main extends ApplicationAdapter {
         }
     }
 
-    public static void ending() {
+    public static void updateEnd() {
         status = "end";
         writeRecord();
         for (Bullet bullet : bullets) {

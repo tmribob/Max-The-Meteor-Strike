@@ -20,7 +20,7 @@ public class Asteroid extends CosmicObjects {
         hp = (byte) MathUtils.random(1, 3);
         image = images[hp - 1];
         setPosition();
-        speed = (short) (350 + Math.random() * Main.getCountAsteroidDestroy() /2);
+        speed = (short) (350 + Math.random() * Main.getCountAsteroidDestroy() / 2);
         scale = (float) (1.5f + Math.random() * hp / 2);
         rotation = (byte) MathUtils.random(-128, 127);
         height = image.getHeight();
@@ -33,13 +33,17 @@ public class Asteroid extends CosmicObjects {
         recreate();
     }
 
-    public void conflict(Sound explode) {
-        hp--;
-        if (hp == 0) {
-            destroy();
-            explode.play(1.f);
-            Main.setCountAsteroidDestroy();
-        }
-    }
 
+    public boolean checkConflictWithAsteroid(Bullet bullet, Sound explode) {
+        if (Math.pow((bullet.getPosition().x - position.x) / (bullet.getWidth() * 2 + width), 2)
+                + Math.pow((bullet.getPosition().y - position.y) / (bullet.getHeight() * 2 + height), 2) <= 0.25f) {
+            hp--;
+            if (hp == 0) {
+                Main.setCountAsteroidDestroy();
+                explode.play(1);
+            }
+            return true;
+        }
+        return false;
+    }
 }
