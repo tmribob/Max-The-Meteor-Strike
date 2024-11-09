@@ -76,7 +76,7 @@ public class Main extends ApplicationAdapter {
         for (int i = 0; i < asteroids.length; i++) {
             asteroids[i] = new Asteroid((byte) MathUtils.random(1, 3));
             if (i < countAsteroid) {
-                asteroids[i].setActive(true);
+                asteroids[i].revive();
             }
         }
         try (Scanner scanner = new Scanner(new File("records.txt"))) {
@@ -119,7 +119,7 @@ public class Main extends ApplicationAdapter {
             for (int i = 0; i < countAsteroid; i++) {
                 asteroids[i].render(batch);
             }
-            if (!medicine.isHide()) {
+            if (medicine.isActive()) {
                 medicine.render(batch);
             }
         }
@@ -167,11 +167,11 @@ public class Main extends ApplicationAdapter {
                     b.update(dt);
                 }
             }
-            if (!medicine.isHide()) {
+            if (medicine.isActive()) {
                 medicine.update(dt);
                 checkMedicine();
-            } else if ((int) (Math.random() * 5000) == 252) {
-                medicine.setHide(false);
+            } else if ((int) (Math.random() * 5000) == 252 | countAsteroidDestroy==30) {
+                medicine.revive();
             }
         }
     }
@@ -214,12 +214,12 @@ public class Main extends ApplicationAdapter {
     }
 
     public void checkMedicine() {
-        if (Math.pow((medicine.getPosition().x - ship.getPosition().x) / (medicine.getW() * 1.5f + ship.getWidth()), 2)
-            + Math.pow((medicine.getPosition().y - ship.getPosition().y) / (medicine.getH() * 1.5f + ship.getHeight()), 2)
+        if (Math.pow((medicine.getPosition().x - ship.getPosition().x) / (medicine.getWidth() * 1.5f + ship.getWidth()), 2)
+            + Math.pow((medicine.getPosition().y - ship.getPosition().y) / (medicine.getHeight() * 1.5f + ship.getHeight()), 2)
             <= 0.25f) {
             ship.heal();
             heal.play(1);
-            medicine.setHide(true);
+            medicine.destroy();
         }
     }
 

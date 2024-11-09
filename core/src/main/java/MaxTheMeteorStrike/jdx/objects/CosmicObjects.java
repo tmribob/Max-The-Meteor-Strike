@@ -32,7 +32,7 @@ public class CosmicObjects {
     public void update(float dt) {
         position.x -= (int) (speed + dt);
         if (position.x < -width / 2 || hp == 0) {
-            setActive(false);
+            destroy();
         }
     }
 
@@ -58,7 +58,19 @@ public class CosmicObjects {
             width, height, scale, scale, rotation, 0, 0, (int) width, (int) height, false, false);
     }
 
-    public void setActive(boolean active) {
-        isActive = active;
+
+    public boolean isActive() {
+        return isActive;
+    }
+    public void destroy(){
+        isActive=false;
+        hp=0;
+        position.set(Gdx.graphics.getWidth() + width / 2, Gdx.graphics.getHeight() + height);
+
+    }
+    public void revive(){
+        isActive=true;
+        setPosition();
+        hp=1;
     }
 }

@@ -28,18 +28,18 @@ public class Asteroid extends CosmicObjects {
     }
 
 
+    @Override
+    public void destroy() {
+        recreate();
+    }
+
     public void conflict(Sound explode) {
         hp--;
         if (hp == 0) {
-            setActive(false);
+            revive();
             explode.play(1.f);
             Main.setCountAsteroidDestroy();
         }
-    }
-
-    @Override
-    public void setActive(boolean active) {
-        recreate();
     }
 
 }
