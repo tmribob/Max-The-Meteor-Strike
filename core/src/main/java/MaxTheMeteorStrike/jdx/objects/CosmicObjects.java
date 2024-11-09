@@ -15,20 +15,23 @@ public class CosmicObjects {
     protected float width;
     protected float height;
     protected boolean isActive;
+    protected byte rotation;
 
-    public CosmicObjects(byte hp, float speed,Texture image,float scale){
+    public CosmicObjects(byte hp, float speed, Texture image, float scale, byte rotation) {
         this.hp = hp;
         this.speed = speed;
         this.image = image;
         width = image.getWidth();
         height = image.getHeight();
-        position = new Vector2(Gdx.graphics.getWidth()+  width /2, Gdx.graphics.getHeight()+height);
-        this.scale=scale;
-        isActive=false;
+        position = new Vector2(Gdx.graphics.getWidth() + width / 2, Gdx.graphics.getHeight() + height);
+        this.scale = scale;
+        isActive = false;
+        this.rotation = rotation;
     }
+
     public void update(float dt) {
         position.x -= (int) (speed + dt);
-        if (position.x < -width /2 || hp==0) {
+        if (position.x < -width / 2 || hp == 0) {
             setActive(false);
         }
     }
@@ -49,9 +52,10 @@ public class CosmicObjects {
     public Vector2 getPosition() {
         return position;
     }
+
     public void render(SpriteBatch batch) {
         batch.draw(image, position.x - width / 2, position.y - height / 2, width / 2, height / 2,
-            width, height, scale, scale, 0, 0, 0, (int) width, (int) height, false, false);
+            width, height, scale, scale, rotation, 0, 0, (int) width, (int) height, false, false);
     }
 
     public void setActive(boolean active) {

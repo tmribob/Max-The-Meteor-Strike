@@ -5,68 +5,65 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
 
 
-public class SpaceShip {
-    private final Vector2 position;
-    private int speed;
+public class SpaceShip extends CosmicObjects {
     private float fireTime;
     private final float fireRate;
-    private int hp;
     private boolean isDestroy;
 
-    private static Texture shipImg;
-    private final Texture[] shipImages = new Texture[]{
-        new Texture("spaceShip/ship.png"),
-        new Texture("spaceShip/damage1.png"),
-        new Texture("spaceShip/damage2.png"),
-        new Texture("spaceShip/damage3.png"),
-        new Texture("spaceShip/broken.png")};
-
+    private static final Texture[] shipImages = new Texture[]{
+            new Texture("spaceShip/ship.png"),
+            new Texture("spaceShip/damage1.png"),
+            new Texture("spaceShip/damage2.png"),
+            new Texture("spaceShip/damage3.png"),
+            new Texture("spaceShip/broken.png")};
 
     public SpaceShip() {
+        super((byte) 4, 400, shipImages[0], 1, (byte) 0);
+        position.set(width + 30, (float) Gdx.graphics.getHeight() / 2);
         fireRate = 0.2f;
-        position = new Vector2();
-        recoveryShip();
+        isDestroy = false;
     }
 
-    public void render(SpriteBatch batch) {
-//        if (!isDestroy) {
-//            batch.draw(shipImg, position.x - ((float) shipImg.getWidth() / 2), position.y - ((float) shipImg.getHeight() / 2));
-//        } else {
-//            batch.draw(shipImg, position.x - (float) shipImg.getWidth() / 2, position.y - (float) shipImg.getHeight() / 2, (float) shipImg.getWidth() / 2, (float) shipImg.getHeight() / 2,
-//                shipImg.getWidth(), shipImg.getHeight(), 1, 1, -45, 0, 0, shipImg.getWidth(), shipImg.getHeight(), false, false);
-//        }
-        batch.draw(shipImg, position.x - ((float) shipImg.getWidth() / 2), position.y - ((float) shipImg.getHeight() / 2));
-
+    public void recoveryShip() {
+        hp = 4;
+        speed = 400;
+        image = shipImages[4 - hp];
+        position.set(width + 30, (float) Gdx.graphics.getHeight() / 2);
+        isDestroy = false;
+        rotation=0;
     }
 
+
+    @Override
     public void update(float dt) {
-        if (isDestroy && position.y > -1 * ((float) shipImg.getHeight() / 2)) {
+        if (isDestroy && position.y > -1 * (height / 2)) {
             position.x += speed * dt;
             position.y -= speed * dt;
+            if(rotation>-45){
+                rotation--;
+            }
 
         }
         if (!isDestroy) {
             if (Gdx.input.isKeyPressed(Input.Keys.D) | Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-                if (position.x < Gdx.graphics.getWidth() - ((float) shipImg.getWidth() / 2))
+                if (position.x < Gdx.graphics.getWidth() - (width / 2))
                     position.x += speed * dt;
             }
             if (Gdx.input.isKeyPressed(Input.Keys.W) | Gdx.input.isKeyPressed(Input.Keys.UP)) {
-                if (position.y < Gdx.graphics.getHeight() - ((float) shipImg.getHeight() / 2))
+                if (position.y < Gdx.graphics.getHeight() - (height / 2))
                     position.y += speed * dt;
             }
             if (Gdx.input.isKeyPressed(Input.Keys.A) | Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-                if (position.x > (float) shipImg.getWidth() / 2)
+                if (position.x > width / 2)
                     position.x -= speed * dt;
             }
             if (Gdx.input.isKeyPressed(Input.Keys.S) | Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-                if (position.y > (float) shipImg.getHeight() / 2)
+                if (position.y > height / 2)
                     position.y -= speed * dt;
             }
-            if (Gdx.input.isKeyPressed(Input.Keys.SPACE) ) {
+            if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
                 fireTime += dt;
                 if (fireTime > fireRate) {
                     fireTime -= fireRate;
@@ -77,18 +74,9 @@ public class SpaceShip {
     }
 
 
-
-    public Vector2 getPosition() {
-        return position;
-    }
-
-    public static int[] getSize() {
-        return new int[]{shipImg.getWidth(), shipImg.getHeight()};
-    }
-
     public void getDamage(Sound destroy) {
         hp--;
-        shipImg = shipImages[4 - hp];
+        image = shipImages[4 - hp];
         if (hp <= 2) {
             speed = 300;
         }
@@ -99,21 +87,14 @@ public class SpaceShip {
         }
     }
 
-    public void recoveryShip() {
-        hp = 4;
-        speed = 400;
-        shipImg = shipImages[4 - hp];
-        position.set(shipImg.getWidth() + 30, (float) Gdx.graphics.getHeight() / 2);
-        isDestroy = false;
-    }
-
     public int getHp() {
         return hp;
     }
-    public void heal(){
-        if(hp<4){
+
+    public void heal() {
+        if (hp < 4) {
             hp++;
-            shipImg = shipImages[4 - hp];
+            image = shipImages[4 - hp];
         }
     }
 }

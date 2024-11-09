@@ -51,7 +51,7 @@ public class Main extends ApplicationAdapter {
         bullets = new Bullet[40];
         fire = new FireParticles[100];
         asteroids = new Asteroid[50];
-        countAsteroid =5;
+        countAsteroid = 5;
         medicine = new Medicine();
         opacity = new float[]{0.75f, 1.f};
         laser = Gdx.audio.newSound(Gdx.files.internal("audio/laser.mp3"));
@@ -74,8 +74,8 @@ public class Main extends ApplicationAdapter {
             fire[i] = new FireParticles();
         }
         for (int i = 0; i < asteroids.length; i++) {
-            asteroids[i] = new Asteroid((byte) MathUtils.random(1,3));
-            if(i<countAsteroid){
+            asteroids[i] = new Asteroid((byte) MathUtils.random(1, 3));
+            if (i < countAsteroid) {
                 asteroids[i].setActive(true);
             }
         }
@@ -116,7 +116,7 @@ public class Main extends ApplicationAdapter {
                     b.render(batch);
                 }
             }
-            for (int i = 0; i<countAsteroid; i++) {
+            for (int i = 0; i < countAsteroid; i++) {
                 asteroids[i].render(batch);
             }
             if (!medicine.isHide()) {
@@ -151,7 +151,7 @@ public class Main extends ApplicationAdapter {
             if (particle.isVisible()) {
                 particle.update(dt);
             } else {
-                particle.setPosition(ship.getPosition(), SpaceShip.getSize(), ship.getHp());
+                particle.setPosition(ship.getPosition(), ship.getWidth(),ship.getHeight(), ship.getHp());
             }
         }
         if (status.equals("start")) {
@@ -203,8 +203,8 @@ public class Main extends ApplicationAdapter {
                 return;
             }
         }
-        if (Math.pow((asteroid.getPosition().x - ship.getPosition().x) / (asteroid.getWidth() * 1.5f + SpaceShip.getSize()[0]), 2)
-            + Math.pow((asteroid.getPosition().y - ship.getPosition().y) / (asteroid.getHeight() * 1.5f + SpaceShip.getSize()[1]), 2)
+        if (Math.pow((asteroid.getPosition().x - ship.getPosition().x) / (asteroid.getWidth() * 1.5f + ship.getWidth()), 2)
+            + Math.pow((asteroid.getPosition().y - ship.getPosition().y) / (asteroid.getHeight() * 1.5f + ship.getHeight()), 2)
             <= 0.25f) {
             ship.getDamage(destroy);
             conflict.play(1);
@@ -214,8 +214,8 @@ public class Main extends ApplicationAdapter {
     }
 
     public void checkMedicine() {
-        if (Math.pow((medicine.getPosition().x - ship.getPosition().x) / (medicine.getW() * 1.5f + SpaceShip.getSize()[0]), 2)
-            + Math.pow((medicine.getPosition().y - ship.getPosition().y) / (medicine.getH() * 1.5f + SpaceShip.getSize()[1]), 2)
+        if (Math.pow((medicine.getPosition().x - ship.getPosition().x) / (medicine.getW() * 1.5f + ship.getWidth()), 2)
+            + Math.pow((medicine.getPosition().y - ship.getPosition().y) / (medicine.getH() * 1.5f + ship.getHeight()), 2)
             <= 0.25f) {
             ship.heal();
             heal.play(1);
@@ -225,7 +225,7 @@ public class Main extends ApplicationAdapter {
 
     public static void setCountAsteroidDestroy() {
         countAsteroidDestroy++;
-        if (countAsteroidDestroy%30==0){
+        if (countAsteroidDestroy % 30 == 0) {
             countAsteroid++;
         }
     }

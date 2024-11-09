@@ -58,15 +58,15 @@ public class FireParticles {
 
     }
 
-    public void setPosition(Vector2 position, int[] size, int hp) {
+    public void setPosition(Vector2 position, float width,float height, int hp) {
         visible = true;
         if (hp == 2 || hp == 1) {
-            this.position.set(position.x - (float) size[0] / 2, MathUtils.random(position.y + (float) size[1] / 6, position.y + (float) size[1] / 2));
+            this.position.set(position.x - width / 2, MathUtils.random(position.y + height / 6, position.y + height / 2));
             return;
         }
-        float range1 = MathUtils.random(position.y - (float) size[1] / 2, position.y - (float) size[1] / 6);
-        float range2 = MathUtils.random(position.y + (float) size[1] / 6, position.y + (float) size[1] / 2);
-        this.position.set(position.x - (float) size[0] / 2, Math.random() * 2 < 1 ? range1 : range2);
+        float range1 = MathUtils.random(position.y - height / 2, position.y - height / 6);
+        float range2 = MathUtils.random(position.y + height / 6, position.y + height / 2);
+        this.position.set(position.x - width / 2, Math.random() * 2 < 1 ? range1 : range2);
     }
 
     public boolean isVisible() {
