@@ -20,7 +20,7 @@ public class SpaceShip extends CosmicObjects {
             new Texture("spaceShip/broken.png")};
 
     public SpaceShip() {
-        super((byte) 4, 400, shipImages[0], 1, (byte) 0);
+        super((byte) 4, (short) 400, shipImages[0], 1, (byte) 0);
         position.set(width + 30, (float) Gdx.graphics.getHeight() / 2);
         fireRate = 0.2f;
         isDestroy = false;
@@ -28,7 +28,7 @@ public class SpaceShip extends CosmicObjects {
 
     public void recoveryShip() {
         hp = 4;
-        speed = 400;
+        speed = (short) 400;
         image = shipImages[4 - hp];
         position.set(width + 30, (float) Gdx.graphics.getHeight() / 2);
         isDestroy = false;
@@ -78,7 +78,7 @@ public class SpaceShip extends CosmicObjects {
         hp--;
         image = shipImages[4 - hp];
         if (hp <= 2) {
-            speed = 300;
+            speed =(short) 300;
         }
         if (hp == 0) {
             isDestroy = true;

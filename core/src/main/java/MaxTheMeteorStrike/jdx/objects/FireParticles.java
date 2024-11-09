@@ -13,7 +13,7 @@ public class FireParticles {
     private final Vector2 position;
     private float range; // на сколько далеко улетела частичка
     private static final int maxRange = 30; // максимальное расстояние, на которое может отлететь частичка
-    private static final int speed = 90;
+    private static final short speed = 90;
     private boolean visible; // активна частица или нет
     private int count;
 

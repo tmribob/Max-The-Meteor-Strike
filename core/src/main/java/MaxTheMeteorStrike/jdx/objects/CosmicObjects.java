@@ -9,7 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 public class CosmicObjects {
     protected Vector2 position;
     protected byte hp;
-    protected float speed;
+    protected short speed;
     protected float scale;
     protected Texture image;
     protected float width;
@@ -17,7 +17,7 @@ public class CosmicObjects {
     protected boolean isActive;
     protected byte rotation;
 
-    public CosmicObjects(byte hp, float speed, Texture image, float scale, byte rotation) {
+    public CosmicObjects(byte hp, short speed, Texture image, float scale, byte rotation) {
         this.hp = hp;
         this.speed = speed;
         this.image = image;
@@ -30,7 +30,7 @@ public class CosmicObjects {
     }
 
     public void update(float dt) {
-        position.x -= (int) (speed + dt);
+        position.x -=  speed * dt;
         if (position.x < -width / 2 || hp == 0) {
             destroy();
         }
@@ -69,8 +69,8 @@ public class CosmicObjects {
 
     }
     public void revive(){
+        hp=1;
         isActive=true;
         setPosition();
-        hp=1;
     }
 }

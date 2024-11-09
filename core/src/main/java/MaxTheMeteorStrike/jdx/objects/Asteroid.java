@@ -13,14 +13,14 @@ public class Asteroid extends CosmicObjects {
             new Texture("asteroid/asteroidRed.png")};
 
     public Asteroid(byte hp) {
-        super(hp, 5.f, images[hp - 1], (float) (1.5f + Math.random() * hp / 2), (byte) MathUtils.random(-128, 127));
+        super(hp, (short) 300, images[hp - 1], (float) (1.5f + Math.random() * hp / 2), (byte) MathUtils.random(-128, 127));
     }
 
     public void recreate() {
         hp = (byte) MathUtils.random(1, 3);
         image = images[hp - 1];
         setPosition();
-        speed = (float) (5.f + Math.random() * Main.getCountAsteroidDestroy() / 100);
+        speed = (short) (350 + Math.random() * Main.getCountAsteroidDestroy() /2);
         scale = (float) (1.5f + Math.random() * hp / 2);
         rotation = (byte) MathUtils.random(-128, 127);
         height = image.getHeight();
@@ -36,7 +36,7 @@ public class Asteroid extends CosmicObjects {
     public void conflict(Sound explode) {
         hp--;
         if (hp == 0) {
-            revive();
+            destroy();
             explode.play(1.f);
             Main.setCountAsteroidDestroy();
         }

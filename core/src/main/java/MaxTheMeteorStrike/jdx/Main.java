@@ -76,7 +76,7 @@ public class Main extends ApplicationAdapter {
         for (int i = 0; i < asteroids.length; i++) {
             asteroids[i] = new Asteroid((byte) MathUtils.random(1, 3));
             if (i < countAsteroid) {
-                asteroids[i].revive();
+                asteroids[i].recreate();
             }
         }
         try (Scanner scanner = new Scanner(new File("records.txt"))) {
@@ -111,9 +111,10 @@ public class Main extends ApplicationAdapter {
             }
             textField.draw(batch, "Asteroid destroyed: " + countAsteroidDestroy, (float) Gdx.graphics.getWidth() - 250, (float) Gdx.graphics.getHeight() - 25);
             textField.draw(batch, "Max record: " + maxRecord, (float) Gdx.graphics.getWidth() - 250, (float) Gdx.graphics.getHeight() - 50);
-            for (Bullet b : bullets) {
-                if (b.isAvailable()) {
-                    b.render(batch);
+            for (Bullet bullet : bullets) {
+                if (bullet.isActive()) {
+//                    System.err.println(dt);
+                    bullet.render(batch);
                 }
             }
             for (int i = 0; i < countAsteroid; i++) {
@@ -151,7 +152,7 @@ public class Main extends ApplicationAdapter {
             if (particle.isVisible()) {
                 particle.update(dt);
             } else {
-                particle.setPosition(ship.getPosition(), ship.getWidth(),ship.getHeight(), ship.getHp());
+                particle.setPosition(ship.getPosition(), ship.getWidth(), ship.getHeight(), ship.getHp());
             }
         }
         if (status.equals("start")) {
@@ -162,15 +163,15 @@ public class Main extends ApplicationAdapter {
                 checkConflict(asteroids[i]);
                 asteroids[i].update(dt);
             }
-            for (Bullet b : bullets) {
-                if (b.isAvailable()) {
-                    b.update(dt);
+            for (Bullet bullet : bullets) {
+                if (bullet.isActive()) {
+                    bullet.update(dt);
                 }
             }
             if (medicine.isActive()) {
                 medicine.update(dt);
                 checkMedicine();
-            } else if ((int) (Math.random() * 5000) == 252 | countAsteroidDestroy==30) {
+            } else if ((int) (Math.random() * 5000) == 252 | countAsteroidDestroy == 30) {
                 medicine.revive();
             }
         }
@@ -192,15 +193,14 @@ public class Main extends ApplicationAdapter {
 
     private void checkConflict(Asteroid asteroid) {
         for (Bullet bullet : bullets) {
-            if (!bullet.isAvailable()) {
-                continue;
-            }
-            if ((bullet.getPosition().x + (float) bullet.getW() / 2 >= asteroid.getPosition().x - asteroid.getWidth() / 2) &&
-                (Math.abs((asteroid.getPosition().y + asteroid.getHeight() / 2) - (bullet.getPosition().y + (float) bullet.getH() / 2))
-                    < asteroid.getHeight())) {
-                bullet.setAvailable(false);
-                asteroid.conflict(explode);
-                return;
+            if (bullet.isActive()) {
+                if ((bullet.getPosition().x + bullet.getWidth() / 2 >= asteroid.getPosition().x - asteroid.getWidth() / 2) &&
+                    (Math.abs((asteroid.getPosition().y + asteroid.getHeight() / 2) - (bullet.getPosition().y + bullet.getHeight() / 2))
+                        < asteroid.getHeight())) {
+                    bullet.destroy();
+                    asteroid.conflict(explode);
+                    return;
+                }
             }
         }
         if (Math.pow((asteroid.getPosition().x - ship.getPosition().x) / (asteroid.getWidth() * 1.5f + ship.getWidth()), 2)
@@ -245,8 +245,8 @@ public class Main extends ApplicationAdapter {
     public static void ending() {
         status = "end";
         writeRecord();
-        for (Bullet b : bullets) {
-            b.setAvailable(false);
+        for (Bullet bullet : bullets) {
+            bullet.destroy();
         }
         for (int i = 0; i < 5 + countAsteroidDestroy / 30; i++) {
             asteroids[i].recreate();
@@ -255,9 +255,9 @@ public class Main extends ApplicationAdapter {
 
     public static void fire() {
         if (status.equals("playing")) {
-            for (Bullet b : bullets) {
-                if (!b.isAvailable()) {
-                    b.setup(ship.getPosition());
+            for (Bullet bullet : bullets) {
+                if (!bullet.isActive()) {
+                    bullet.setup(ship.getPosition());
                     laser.play(0.1f);
                     laser.setPitch(soundLaser, MathUtils.random(0.8f, 1.2f));
                     break;

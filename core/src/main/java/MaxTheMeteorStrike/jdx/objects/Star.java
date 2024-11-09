@@ -3,11 +3,12 @@ package MaxTheMeteorStrike.jdx.objects;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 public class Star {
     private final Vector2 position;
-    private float speed;
+    private short speed;
     private float rotation;
     private float scale;
 
@@ -21,18 +22,18 @@ public class Star {
     }
 
     public void update(float dt) {
-        position.x -= (int) (speed + dt);
+        position.x -= speed * dt;
         rotation += 5;
         if (position.x < -50) {
             position.x = Gdx.graphics.getWidth();
-            position.y = Gdx.graphics.getHeight() * (float) Math.random();
+            position.y = MathUtils.random(0,Gdx.graphics.getHeight());
             setSpeed();
             setScale();
         }
     }
 
     private void setSpeed() {
-        speed = (float) (15.f + Math.random() * 15.f);
+        speed = (short) MathUtils.random(900,1900);
     }
 
     private void setScale() {
