@@ -1,13 +1,14 @@
-package MaxTheMeteorStrike.jdx;
+package MaxTheMeteorStrike.jdx.objects;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 public class Star {
     private final Vector2 position;
-    private float speed;
+    private short speed;
     private float rotation;
     private float scale;
 
@@ -21,25 +22,26 @@ public class Star {
     }
 
     public void update(float dt) {
-        position.x -= (int) (speed + dt);
+        position.x -= speed * dt;
         rotation += 5;
         if (position.x < -50) {
             position.x = Gdx.graphics.getWidth();
-            position.y = Gdx.graphics.getHeight() * (float) Math.random();
+            position.y = MathUtils.random(0, Gdx.graphics.getHeight());
             setSpeed();
             setScale();
         }
     }
 
     private void setSpeed() {
-        speed = (float) (15.f + Math.random() * 15.f);
+        speed = (short) MathUtils.random(900, 1900);
     }
 
     private void setScale() {
-        scale = (float) (0.3f + Math.random() * 0.25f);
+        scale = (float) (0.1f + Math.random() * 0.25f);
     }
 
     public void render(SpriteBatch batch) {
-        batch.draw(image, position.x, position.y, 8, 8, 16, 16, scale, scale, rotation, 0, 0, 32, 32, false, false);
+        batch.draw(image, position.x, position.y, (float) image.getWidth() / 2, (float) image.getHeight() / 2,
+                image.getWidth(), image.getHeight(), scale, scale, rotation, 0, 0, image.getWidth(), image.getHeight(), false, false);
     }
 }

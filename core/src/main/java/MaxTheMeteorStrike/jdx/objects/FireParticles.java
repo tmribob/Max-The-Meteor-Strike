@@ -1,4 +1,4 @@
-package MaxTheMeteorStrike.jdx;
+package MaxTheMeteorStrike.jdx.objects;
 
 
 import com.badlogic.gdx.graphics.Pixmap;
@@ -13,7 +13,7 @@ public class FireParticles {
     private final Vector2 position;
     private float range; // на сколько далеко улетела частичка
     private static final int maxRange = 30; // максимальное расстояние, на которое может отлететь частичка
-    private static final int speed = 90;
+    private static final short speed = 90;
     private boolean visible; // активна частица или нет
     private int count;
 
@@ -31,7 +31,7 @@ public class FireParticles {
         fireTex = new Texture[]{new Texture(fireParticle1), new Texture(fireParticle2), new Texture(fireParticle3)};
     }
 
-    FireParticles() {
+    public FireParticles() {
         position = new Vector2(0, 0);
         visible = false;
         count = 0;
@@ -58,15 +58,15 @@ public class FireParticles {
 
     }
 
-    public void setPosition(Vector2 position, int[] size, int hp) {
+    public void setPosition(Vector2 position, float width, float height, int hp) {
         visible = true;
         if (hp == 2 || hp == 1) {
-            this.position.set(position.x - (float) size[0] / 2, MathUtils.random(position.y + (float) size[1] / 6, position.y + (float) size[1] / 2));
+            this.position.set(position.x - width / 2, MathUtils.random(position.y + height / 6, position.y + height / 2));
             return;
         }
-        float range1 = MathUtils.random(position.y - (float) size[1] / 2, position.y - (float) size[1] / 6);
-        float range2 = MathUtils.random(position.y + (float) size[1] / 6, position.y + (float) size[1] / 2);
-        this.position.set(position.x - (float) size[0] / 2, Math.random() * 2 < 1 ? range1 : range2);
+        float range1 = MathUtils.random(position.y - height / 2, position.y - height / 6);
+        float range2 = MathUtils.random(position.y + height / 6, position.y + height / 2);
+        this.position.set(position.x - width / 2, Math.random() * 2 < 1 ? range1 : range2);
     }
 
     public boolean isVisible() {
