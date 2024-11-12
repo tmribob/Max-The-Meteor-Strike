@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
-public class CosmicObjects {
+public abstract class CosmicObjects {
     protected Vector2 position;
     protected byte hp;
     protected short speed;
@@ -14,7 +14,7 @@ public class CosmicObjects {
     protected Texture image;
     protected float width;
     protected float height;
-    protected boolean isActive;
+    private boolean isActive;
     protected byte rotation;
 
     public CosmicObjects(byte hp, short speed, Texture image, float scale, byte rotation) {

@@ -33,7 +33,6 @@ public class SpaceShip extends CosmicObjects {
         image = shipImages[4 - hp];
         position.set(width + 30, (float) Gdx.graphics.getHeight() / 2);
         isDestroy = false;
-        isActive = true;
         rotation = 0;
     }
 
@@ -45,6 +44,7 @@ public class SpaceShip extends CosmicObjects {
             if (rotation > -45) {
                 rotation--;
             }
+            return;
         }
         if (!isDestroy) {
             if (Gdx.input.isKeyPressed(Input.Keys.D) | Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
@@ -79,13 +79,14 @@ public class SpaceShip extends CosmicObjects {
     public void getDamage(Sound destroy) {
         hp--;
         image = shipImages[4 - hp];
-        if (hp <= 2) {
-            speed = (short) 300;
-        }
         if (hp == 0) {
             isDestroy = true;
             Main.updateEnd();
             destroy.play(0.1f);
+            return;
+        }
+        if (hp <= 2) {
+            speed = (short) 300;
         }
     }
 

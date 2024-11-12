@@ -8,7 +8,7 @@ audio/explode.mp3
 audio/heal.mp3
 audio/laser.mp3
 bullet.png
-medicine.jpg
+healBox.png
 records.txt
 spaceShip/broken.png
 spaceShip/damage1.png
