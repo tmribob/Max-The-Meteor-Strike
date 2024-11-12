@@ -1,0 +1,20 @@
+
+
+Version:	3.50
+CmdLine:	C:\Users\OIN\Desktop\BVT2301\MaxTheMeteorStrike\MaxTheMeteorStrike.exe --l4j-debug
+JNI:		No
+WOW64:		Yes
+Working dir:	C:\Users\OIN\Desktop\BVT2301\MaxTheMeteorStrike\.
+Requires JDK:	No
+Requires 64-Bit: No
+Java min ver:	
+Java max ver:	
+Substitute:	JAVA_HOME = 
+Substitute:	PATH = C:\Program Files\Java\jdk-22\bin;C:\Program Files\Common Files\Oracle\Java\javapath;C:\Program Files (x86)\Common Files\Oracle\Java\java8path;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\nodejs\;C:\Program Files\Docker\Docker\resources\bin;C:\Program Files\Git\cmd;C:\Program Files\MySQL\MySQL Shell 8.0\bin\;C:\Users\OIN\AppData\Local\Programs\Python\Launcher\;C:\Users\OIN\anaconda3;C:\Users\OIN\anaconda3\Library\mingw-w64\bin;C:\Users\OIN\anaconda3\Library\usr\bin;C:\Users\OIN\anaconda3\Library\bin;C:\Users\OIN\anaconda3\Scripts;C:\Users\OIN\AppData\Local\Microsoft\WindowsApps;C:\Users\OIN\AppData\Local\Programs\Microsoft VS Code\bin;C:\Program Files\JetBrains\PyCharm 2023.2.1\bin;;C:\Program Files\JetBrains\PyCharm Community Edition 2023.2.1\bin;;C:\Users\OIN\AppData\Roaming\npm;C:\Program Files\JetBrains\WebStorm 2024.1.5\bin;;C:\Program Files\Java\jdk-22\bin;;C:\Program Files\Java\jdk-22\bin
+JRE paths:	;C:\Program Files\Java\jdk-22\bin;C:\Program Files\Common Files\Oracle\Java\javapath;C:\Program Files (x86)\Common Files\Oracle\Java\java8path;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\nodejs\;C:\Program Files\Docker\Docker\resources\bin;C:\Program Files\Git\cmd;C:\Program Files\MySQL\MySQL Shell 8.0\bin\;C:\Users\OIN\AppData\Local\Programs\Python\Launcher\;C:\Users\OIN\anaconda3;C:\Users\OIN\anaconda3\Library\mingw-w64\bin;C:\Users\OIN\anaconda3\Library\usr\bin;C:\Users\OIN\anaconda3\Library\bin;C:\Users\OIN\anaconda3\Scripts;C:\Users\OIN\AppData\Local\Microsoft\WindowsApps;C:\Users\OIN\AppData\Local\Programs\Microsoft VS Code\bin;C:\Program Files\JetBrains\PyCharm 2023.2.1\bin;;C:\Program Files\JetBrains\PyCharm Community Edition 2023.2.1\bin;;C:\Users\OIN\AppData\Roaming\npm;C:\Program Files\JetBrains\WebStorm 2024.1.5\bin;;C:\Program Files\Java\jdk-22\bin;;C:\Program Files\Java\jdk-22\bin
+Check launcher:	C:\Program Files\Java\jdk-22\bin\javaw.exe (OK)
+Version string: 1.022.000_002 / 64-Bit (OK)
+Launcher:	C:\Program Files\Java\jdk-22\bin\javaw.exe
+Launcher args:	-jar "C:\Users\OIN\Desktop\BVT2301\MaxTheMeteorStrike\MaxTheMeteorStrike.exe"
+Args length:	77/32768 chars
+Exit code:	0
