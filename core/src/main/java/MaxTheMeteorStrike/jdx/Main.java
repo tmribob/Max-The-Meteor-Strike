@@ -55,7 +55,7 @@ public class Main extends ApplicationAdapter {
         healBox = new HealBox();
         opacity = new float[]{0.75f, 1.f};
         laser = Gdx.audio.newSound(Gdx.files.internal("audio/laser.mp3"));
-        soundLaser = laser.play(0.1f);
+        soundLaser = laser.play(0);
         conflict = Gdx.audio.newSound(Gdx.files.internal("audio/conflict.mp3"));
         destroy = Gdx.audio.newSound(Gdx.files.internal("audio/destroy.mp3"));
         explode = Gdx.audio.newSound(Gdx.files.internal("audio/explode.mp3"));
@@ -63,7 +63,6 @@ public class Main extends ApplicationAdapter {
         music = Gdx.audio.newMusic(Gdx.files.internal("audio/background.mp3"));
         music.play();
         music.setLooping(true);
-        FireParticles.setColor();
         for (int i = 0; i < stars.length; i++) {
             stars[i] = new Star();
         }
