@@ -9,7 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 
 public class FireParticles {
     private static final int size = 3;
-    private static Texture[] fireTex;
+    private static final Texture[] fireTex;
     private final Vector2 position;
     private float range; // на сколько далеко улетела частичка
     private static final int maxRange = 30; // максимальное расстояние, на которое может отлететь частичка
@@ -17,7 +17,7 @@ public class FireParticles {
     private boolean visible; // активна частица или нет
     private int count;
 
-    public static void setColor() {
+    static {
         Pixmap fireParticle1 = new Pixmap(size, size, Pixmap.Format.RGBA8888);
         fireParticle1.setColor(1, 0.41f, 0.23f, 0.75f);
         fireParticle1.fill();
@@ -62,6 +62,9 @@ public class FireParticles {
         visible = true;
         if (hp == 2 || hp == 1) {
             this.position.set(position.x - width / 2, MathUtils.random(position.y + height / 6, position.y + height / 2));
+            return;
+        }
+        if (hp==0){
             return;
         }
         float range1 = MathUtils.random(position.y - height / 2, position.y - height / 6);
