@@ -8,8 +8,8 @@ audio/explode.mp3
 audio/heal.mp3
 audio/laser.mp3
 bullet.png
+healBox.png
 hs_err_pid6420.log
-medicine.png
 records.txt
 spaceShip/broken.png
 spaceShip/damage1.png

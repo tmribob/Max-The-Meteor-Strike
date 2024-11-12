@@ -100,13 +100,8 @@ public class Main extends ApplicationAdapter {
 
     @Override
     public void render() {
-        if (Gdx.input.isKeyPressed(Input.Keys.F)){
-            Graphics.DisplayMode dm = Gdx.graphics.getDisplayMode();
-            Gdx.graphics.setFullscreenMode(dm);
-            resize(dm.width, dm.height);
-        }
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE))
-            Gdx.graphics.setWindowedMode(1280, 720);
+            dispose();
         ScreenUtils.clear(0, 0, 0, 1f);
         float dt = Gdx.graphics.getDeltaTime();
         update();
@@ -249,7 +244,7 @@ public class Main extends ApplicationAdapter {
 
     @Override
     public void resize(int width, int height) {
-        viewport.update(width, height, true);
+        viewport.update( width, height, true);
         camera.update();
     }
 }
