@@ -29,7 +29,7 @@ public class Main extends ApplicationAdapter {
     private static FireParticles[] fire;
     private static Star[] stars;
     private static Asteroid[] asteroids;
-    private static Medicine medicine;
+    private static HealBox healBox;
     private static String status;
     private BitmapFont textField;
     private static int countAsteroidDestroy;
@@ -63,7 +63,7 @@ public class Main extends ApplicationAdapter {
         fire = new FireParticles[100];
         asteroids = new Asteroid[50];
         countAsteroid = 5;
-        medicine = new Medicine();
+        healBox = new HealBox();
         opacity = new float[]{0.75f, 1.f};
         laser = Gdx.audio.newSound(Gdx.files.internal("audio/laser.mp3"));
         soundLaser = laser.play(0.1f);
@@ -157,16 +157,16 @@ public class Main extends ApplicationAdapter {
                 }
                 asteroids[i].render(batch);
             }
-            if (medicine.isActive()) {
-                medicine.update(dt);
-                if (ship.checkConflictWithShip(medicine)) {
+            if (healBox.isActive()) {
+                healBox.update(dt);
+                if (ship.checkConflictWithShip(healBox)) {
                     ship.heal();
                     heal.play(1);
-                    medicine.destroy();
+                    healBox.destroy();
                 }
-                medicine.render(batch);
+                healBox.render(batch);
             } else if ((int) (Math.random() * 2500) == 252) {
-                medicine.revive();
+                healBox.revive();
             }
         }
         batch.end();
