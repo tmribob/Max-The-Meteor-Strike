@@ -3,13 +3,17 @@ package MaxTheMeteorStrike.jdx;
 import MaxTheMeteorStrike.jdx.objects.*;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.io.*;
 import java.util.Scanner;
@@ -39,9 +43,16 @@ public class Main extends ApplicationAdapter {
     private Sound conflict;
     private Sound explode;
     private Sound heal;
+    private OrthographicCamera camera;
+    private Viewport viewport;
+
 
     @Override
     public void create() {
+        camera = new OrthographicCamera();
+        viewport = new FillViewport(1280f, 720f, camera);
+        Graphics.DisplayMode dm = Gdx.graphics.getDisplayMode();
+        Gdx.graphics.setFullscreenMode(dm);
         status = "start";
         textField = new BitmapFont();
         textField.getData().setScale(1.5f, 1.5f);
@@ -89,6 +100,13 @@ public class Main extends ApplicationAdapter {
 
     @Override
     public void render() {
+        if (Gdx.input.isKeyPressed(Input.Keys.F)){
+            Graphics.DisplayMode dm = Gdx.graphics.getDisplayMode();
+            Gdx.graphics.setFullscreenMode(dm);
+            resize(dm.width, dm.height);
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE))
+            Gdx.graphics.setWindowedMode(1280, 720);
         ScreenUtils.clear(0, 0, 0, 1f);
         float dt = Gdx.graphics.getDeltaTime();
         update();
@@ -227,6 +245,12 @@ public class Main extends ApplicationAdapter {
         heal.dispose();
         explode.dispose();
         conflict.dispose();
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        viewport.update(width, height, true);
+        camera.update();
     }
 }
 
