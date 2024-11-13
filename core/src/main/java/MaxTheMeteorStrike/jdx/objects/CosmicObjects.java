@@ -44,11 +44,10 @@ public abstract class CosmicObjects {
         return width;
     }
 
-    public void setPosition() {
+    public void setRandomPosition() {
         position.x = MathUtils.random(Gdx.graphics.getWidth(), Gdx.graphics.getWidth() + 200);
         position.y = MathUtils.random(height / 2, Gdx.graphics.getHeight() - height / 2);
     }
-
     public Vector2 getPosition() {
         return position;
     }
@@ -73,6 +72,6 @@ public abstract class CosmicObjects {
     public void revive() {
         hp = 1;
         isActive = true;
-        setPosition();
+        setRandomPosition();
     }
 }

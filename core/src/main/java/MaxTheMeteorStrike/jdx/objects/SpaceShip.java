@@ -98,6 +98,9 @@ public class SpaceShip extends CosmicObjects {
         if (hp < 4) {
             hp++;
             image = shipImages[4 - hp];
+            if(hp>2){
+                speed = (short) 400;
+            }
         }
     }
 

@@ -62,7 +62,7 @@ public class Main extends ApplicationAdapter {
         bullets = new Bullet[20];
         fire = new FireParticles[100];
         asteroids = new Asteroid[50];
-        countAsteroid = 5;
+        countAsteroid = 15;
         healBox = new HealBox();
         opacity = new float[]{0.75f, 1.f};
         laser = Gdx.audio.newSound(Gdx.files.internal("audio/laser.mp3"));
@@ -189,7 +189,7 @@ public class Main extends ApplicationAdapter {
 
     public static void setCountAsteroidDestroy() {
         countAsteroidDestroy++;
-        if (countAsteroidDestroy % 30 == 0) {
+        if (countAsteroidDestroy % 10 == 0) {
             countAsteroid++;
         }
     }
@@ -209,12 +209,7 @@ public class Main extends ApplicationAdapter {
     public static void updateEnd() {
         status = "end";
         writeRecord();
-        for (Bullet bullet : bullets) {
-            bullet.destroy();
-        }
-        for (int i = 0; i < countAsteroid; i++) {
-            asteroids[i].destroy();
-        }
+        delete();
     }
 
     public static void fire() {
@@ -243,8 +238,18 @@ public class Main extends ApplicationAdapter {
 
     @Override
     public void resize(int width, int height) {
-        viewport.update( width, height, true);
+        viewport.update(width, height, true);
         camera.update();
+    }
+
+    private static void delete() {
+        for (Bullet bullet : bullets) {
+            bullet.destroy();
+        }
+        for (int i = 0; i < countAsteroid; i++) {
+            asteroids[i].destroy();
+        }
+        healBox.destroy();
     }
 }
 
